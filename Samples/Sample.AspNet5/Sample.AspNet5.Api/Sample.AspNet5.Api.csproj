@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    
+    <!--To use included custom AssemblyInfo.cs file (and prevent autogenerate default during compilation)-->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!--Allow wildcards in version number inside AssemblyInfo.cs == generates magic numbers to specifu compilation datetime. -->
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+
+  <!-- ===== This normally would be NuGet package reference ===== -->
+  <ItemGroup Label="NuGetReference">
+    <ProjectReference Include="..\..\..\Source\Salix.AspNetCore.Utilities\Salix.AspNetCore.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Label="Internal project references">
+    <ProjectReference Include="..\Sample.AspNet5.Logic\Sample.AspNet5.Logic.csproj" />
+  </ItemGroup>
+
+</Project>

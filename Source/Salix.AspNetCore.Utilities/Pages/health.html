@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>API Health</title>
+    <style>
+      body{
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        background-color: rgb(30, 30, 47);
+        color: #b1b1b5;
+        padding: 1em;
+        padding-top: 0;
+      }
+      h1, h2, h3, h4 {
+        font-family: "Segoe UI Light", Roboto, Arial, sans-serif;
+        font-weight: 200;
+        margin-bottom: 0.3rem;
+      }
+      p {
+        margin-top: 0;
+      }
+      a {
+        color: #248afd;
+        text-decoration: none;
+      }
+      a:hover{
+        text-decoration: underline;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      th, td {
+        border: 1px solid rgb(60, 60, 82);
+        padding: 8px;
+        vertical-align:top;
+      }
+
+      tr:nth-child(even) {
+        background: rgb(36, 36, 54);
+      }
+
+      tr:hover {
+        background: rgb(42, 42, 60);
+      }
+    </style>
+</head>
+<body>
+  <h1>API Health</h1>
+  <h2>Health checks</h2>
+  <div id="hc"></div>
+  <a href='{HealthEndpoint}'>Health</a> - JSON result for heartbeat and monitoring tools to use.
+  <div id="links"></div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- === General properties ===-->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Salix.AspNetCore.Utilities</RootNamespace>
+  </PropertyGroup>
+
+  <!-- === NuGet package description properties ===-->
+  <PropertyGroup Label="NuGet properties">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Product>Salix.AspNetCore.Utilities.Abstractions</Product>
+    <Authors>Anrijs Vitolins</Authors>
+    <Description>
+    </Description>
+    <Copyright>MIT</Copyright>
+    <PackageTags>AspNetCore</PackageTags>
+    <PackageProjectUrl>==== GitHub project ====</PackageProjectUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+
+    <PackageReleaseNotes>
+      Updated NuGet packages to 3.11.1 (18-Jan-2021) to align with API upgrades.
+    </PackageReleaseNotes>
+    <Version>1.2.2</Version>
+    <AssemblyVersion>1.2.2.0</AssemblyVersion>
+    <FileVersion>1.2.2.0</FileVersion>
+  </PropertyGroup>
+
+  <!-- === Dependencies on other NuGet packages (minimum version) ===-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

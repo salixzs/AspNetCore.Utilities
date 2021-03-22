@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- === General properties ===-->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <RootNamespace>Salix.AspNetCore.Utilities</RootNamespace>
+  </PropertyGroup>
+
+  <!-- === NuGet package description properties ===-->
+  <PropertyGroup Label="NuGet properties">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Product>Salix.AspNetCore.Utilities</Product>
+    <Authors>Anrijs Vitolins</Authors>
+    <Description>
+      Core functionalities found in each (REST) API implementation with ASP.NET Core 3+ framework.
+      Provides:
+        1) Error Handler (JSON object details on handled/unhandled exceptions),
+        2) Configuration settings (appsettings.json) can be made validatable, 
+        3) HealthCheck customizations
+    </Description>
+    <Copyright>MIT</Copyright>
+    <PackageTags>api;core;healthcheck</PackageTags>
+    <PackageProjectUrl>======= GitHub =======</PackageProjectUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+
+    <PackageReleaseNotes>
+      Updated NuGet packages to 3.11.1 (18-Jan-2021) to align with API upgrades.
+    </PackageReleaseNotes>
+    <Version>1.2.4</Version>
+    <AssemblyVersion>1.2.4.0</AssemblyVersion>
+    <FileVersion>1.2.4.0</FileVersion>
+  </PropertyGroup>
+
+  <!-- === Dependencies on other NuGet packages (minimum version) ===-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- === Solution project dependencies ===-->
+  <ItemGroup>
+    <ProjectReference Include="..\Salix.AspNetCore.Utilities.Abstractions\Salix.AspNetCore.Utilities.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Pages\Html.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Html.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Pages\Html.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Html.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
