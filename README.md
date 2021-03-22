@@ -7,16 +7,16 @@ There are few functionality extensions provided in package, allowing to better h
 
 These include:
 
-* Global Exception handler (Json error) 
-* Health check formatter
-* Configuration validation
-* Home page & Health page (w/o full MVC stack)
+* **Global Exception handler** (Json error) 
+* **Health check formatter**
+* **Configuration validation**
+* **Home page & Health page** (w/o full MVC stack)
 
-Currently package is targettingPackage is built on .Net Standard 2.0. It is tested by using within Asp.Net Core 5 (on .Net 5) API. Sample solution is added to demonstrate its usage.
+Package is built on .Net Standard 2.0. It is tested by using within Asp.Net Core 5 (on .Net 5) API. Sample solution is added to demonstrate its usage.
 
 ### Global error handler
 
-Allows exceptions to be returned to API calling parties as JSON structure, adding some additional information on its type and causes (incl. CallStack when API runs in development mode). This allows to get these 400 & 500 Http Status code errors with additional information, somewhat complying to [https://tools.ietf.org/html/rfc7807](IETF rfc7807) proposed standard. Here is example on how error is returned when exception is thrown somewhere in API:
+Allows exceptions to be returned to API calling parties as JSON structure, adding some additional information on its type and causes (incl. CallStack when API runs in development mode). This allows to get these 400 & 500 Http Status code errors with additional information, somewhat complying to [IETF rfc7807](https://tools.ietf.org/html/rfc7807) proposed standard. Here is example on how error is returned when exception is thrown somewhere in API:
 ```json
 {
   "type": "ServerError",
@@ -39,6 +39,7 @@ Allows exceptions to be returned to API calling parties as JSON structure, addin
 
 Provided functionalities can handle other types of exceptions differently, like `NotImplementedException`, `DataValidationException` and any other specific exception.
 
+See [more extensive documentation](Documentation/GlobalErrorHandler.md) on how to use this functionality.
 
 
 ### Health check formatter
@@ -90,12 +91,15 @@ Example response:
 }
 ```
 
+See [more extensive documentation](Documentation/HealthCheckFormatter.md) on how to use this functionality.
 
 ### Configuration validation
 
-Provides abstract interface and service registration functionalities to check configuration values, loaded from all possible sources into `IConfiguration` from appsettings.json, user secrets, environment varriables and other defined sources.
+Provides abstract interface and service registration functionalities to check configuration values, loaded from all possible sources into `IConfiguration` from appsettings.json, user secrets, environment variables and other defined sources.
 
-Special exception is thrown, when configuration (sections) are not passing their validations already during API startup routines to avoid nasty excetions due to misconfigurations during runtime.
+Special exception is thrown, when configuration (sections) are not passing their validations already during API startup routines to avoid nasty runtime exceptions due to mis-configuration.
+
+See [more extensive documentation](Documentation/ConfiogurationValidation.md) on how to use this functionality.
 
 ### Root page
 
@@ -112,7 +116,12 @@ Looking at HealthCheck Json output can be problematic to grasp necessary informa
 
 ![Health check and testing page](Documentation/health-check-page.JPG)
 
+See [more extensive documentation](Documentation/Pages.md) on how to use this functionality.
+
 
 ## How to use
 
 TBD when NuGet is ready.
+
+## Release notes
+Available [in this link](Documentation/ReleaseNotes.md).

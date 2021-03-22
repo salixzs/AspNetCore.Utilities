@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Salix.AspNetCore.Utilities;
 using Sample.AspNet5.Logic;
@@ -50,7 +50,9 @@ namespace Sample.AspNet5.Api.Middleware
             {
                 apiError.Status = 500;
                 if (dbException.ErrorType == DatabaseProblemType.WrongSyntax)
-                apiError.ErrorType = ApiErrorType.StorageError;
+                {
+                    apiError.ErrorType = ApiErrorType.StorageError;
+                }
             }
 
             if (exception is NotImplementedException noImplemented)
