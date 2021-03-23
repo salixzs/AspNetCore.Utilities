@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sample.AspNet5.Api.HealthChecks;
@@ -13,14 +12,9 @@ namespace Sample.AspNet5.Api
     /// </summary>
     public class Startup
     {
-        private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
-        {
-            _configuration = configuration;
-            _environment = environment;
-        }
+        public Startup(IWebHostEnvironment environment) => _environment = environment;
 
         /// <summary>
         /// Configures used services with Asp.Net IoC container.
@@ -39,7 +33,7 @@ namespace Sample.AspNet5.Api
                     options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
                     options.JsonSerializerOptions.AllowTrailingCommas = false;
                 });
-            
+
             services.RegisterLogicDependencies(); // Taking own dependencies registration outta startup.
             services.AddApiHealthChecks(_environment.IsDevelopment()); // See custom registration class in "HealthChecks" folder.
         }

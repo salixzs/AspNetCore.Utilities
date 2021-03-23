@@ -1,10 +1,10 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
 namespace Salix.AspNetCore.Utilities
 {
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Options;
-
     public static class ConfigurationHandlingExtensions
     {
         /// <summary>
@@ -12,10 +12,8 @@ namespace Salix.AspNetCore.Utilities
         /// on all registered configuration/settings strongly typed objects.
         /// </summary>
         /// <param name="services">The services - ASP.NET IoC container.</param>
-        public static IServiceCollection AddConfigurationValidation(this IServiceCollection services)
-        {
-            return services.AddTransient<IStartupFilter, SettingsValidationStartupFilter>();
-        }
+        public static IServiceCollection AddConfigurationValidation(this IServiceCollection services) =>
+            services.AddTransient<IStartupFilter, SettingsValidationStartupFilter>();
 
         /// <summary>
         /// Registers a configuration instance which <typeparamref name="TConfigSection" /> will bind against, and registers as a validatble setting.
@@ -28,7 +26,7 @@ namespace Salix.AspNetCore.Utilities
             where TConfigSection : class, IValidatableConfiguration, new()
         {
             services.Configure<TConfigSection>(configuration);
-            services.AddSingleton<TConfigSection>(ctx => ctx.GetRequiredService<IOptions<TConfigSection>>().Value);
+            services.AddSingleton(ctx => ctx.GetRequiredService<IOptions<TConfigSection>>().Value);
             services.AddSingleton<IValidatableConfiguration>(ctx => ctx.GetRequiredService<IOptions<TConfigSection>>().Value);
             return services;
         }
@@ -45,7 +43,7 @@ namespace Salix.AspNetCore.Utilities
             where TConfigSection : class, new()
         {
             services.Configure<TConfigSection>(configuration);
-            services.AddSingleton<TConfigSection>(ctx => ctx.GetRequiredService<IOptions<TConfigSection>>().Value);
+            services.AddSingleton(ctx => ctx.GetRequiredService<IOptions<TConfigSection>>().Value);
             return services;
         }
     }

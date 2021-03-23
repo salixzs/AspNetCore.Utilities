@@ -4,4 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\Salix.AspNetCore.Utilities.Abstractions\Salix.AspNetCore.Utilities.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,11 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+
 namespace Salix.AspNetCore.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-
     /// <summary>
     /// An <see cref="IStartupFilter"/> that validates <see cref="IValidatableConfiguration"/> objects are valid on app startup.
     /// </summary>
@@ -37,6 +37,6 @@ namespace Salix.AspNetCore.Utilities
         }
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        private string DebuggerDisplay => $"{_validatableConfigs.ToList().Count.ToString("D")} config sections";
+        private string DebuggerDisplay => $"{_validatableConfigs.ToList().Count:D} config sections";
     }
 }

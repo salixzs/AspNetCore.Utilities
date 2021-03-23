@@ -1,14 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Salix.AspNetCore.Utilities;
 using Sample.AspNet5.Logic;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Sample.AspNet5.Api.Services
 {
@@ -88,7 +88,7 @@ namespace Sample.AspNet5.Api.Services
                 ContentType = "text/html",
                 StatusCode = (int)HttpStatusCode.OK,
                 Content = HealthTestPage.GetContents(
-                    healthResult, 
+                    healthResult,
                     "/api/health",
                     new List<HealthTestPageLink>
                     {
@@ -125,7 +125,7 @@ namespace Sample.AspNet5.Api.Services
         }
 
         [HttpGet("/api/sample/notyet")]
-        public void NotImplemented() => throw new System.NotImplementedException("Just a demonstration of not implemented stuff.");
+        public void NotImplemented() => throw new NotImplementedException("Just a demonstration of not implemented stuff.");
 
         /// <summary>
         /// Could be any custom testing endpoint to validate how API works.
