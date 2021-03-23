@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -15,15 +15,18 @@ namespace Salix.AspNetCore.Utilities
         /// <param name="buildData">Build and API specific data to include in page.</param>
         public static string GetContents(IndexPageValues buildData)
         {
-            var indexHtml = Pages.Html.index;
+            string indexHtml = Pages.Html.index;
             indexHtml = indexHtml
                 .Replace("{ApiName}", buildData.ApiName)
                 .Replace("{Description}", buildData.Description)
                 .Replace("{Version}", buildData.Version)
-                .Replace("{Built}", buildData.BuiltTime.ToHumanDateString())
                 .Replace("{Environment}", buildData.HostingEnvironment)
                 .Replace("{Mode}", buildData.BuildMode)
                 .Replace("{HealthTestUrl}", buildData.HealthPageAddress);
+
+            indexHtml = buildData.BuiltTime == DateTime.MinValue
+                ? indexHtml.Replace("{Built}", "---")
+                : indexHtml.Replace("{Built}", buildData.BuiltTime.ToHumanDateString());
 
             if (!string.IsNullOrEmpty(buildData.SwaggerPageAddress))
             {

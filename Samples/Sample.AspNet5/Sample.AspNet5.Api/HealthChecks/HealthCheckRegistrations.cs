@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Salix.AspNetCore.Utilities;
-using System;
-using System.Collections.Generic;
 
 namespace Sample.AspNet5.Api.HealthChecks
 {
@@ -33,8 +33,8 @@ namespace Sample.AspNet5.Api.HealthChecks
         /// <param name="isDevelopment">Flag, indicating whether API runs in developer mode - can add more infromation to health checks.</param>
         public static IApplicationBuilder UseApiHealthChecks(this IApplicationBuilder app, bool isDevelopment)
         {
-            HealthCheckOptions healthCheckReportFormat = FormatHealthCheckResponse(isDevelopment);
-            return app.UseHealthChecks(HealthHeckEndpoint, healthCheckReportFormat);
+            HealthCheckOptions healthCheckOptions = FormatHealthCheckResponse(isDevelopment);
+            return app.UseHealthChecks(HealthHeckEndpoint, healthCheckOptions);
         }
 
         /// <summary>
@@ -52,7 +52,9 @@ namespace Sample.AspNet5.Api.HealthChecks
                     { HealthStatus.Degraded, StatusCodes.Status503ServiceUnavailable },
                     { HealthStatus.Unhealthy, StatusCodes.Status503ServiceUnavailable },
                 },
-                ResponseWriter = async (context, report) => await HealthCheckFormatter.JsonResponseWriter(context, report, isDevelopment).ConfigureAwait(false),
+                ResponseWriter = async (context, report) =>
+                        await HealthCheckFormatter.JsonResponseWriter(context, report, isDevelopment)
+                    .ConfigureAwait(false),
             };
             return opts;
         }

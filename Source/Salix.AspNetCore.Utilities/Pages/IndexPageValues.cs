@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
 namespace Salix.AspNetCore.Utilities
@@ -24,7 +24,7 @@ namespace Salix.AspNetCore.Utilities
         /// <summary>
         /// Specify Date and Time when API was built.
         /// </summary>
-        public DateTime BuiltTime { get; set; } = DateTime.Now;
+        public DateTime BuiltTime { get; set; } = DateTime.MinValue;
 
         /// <summary>
         /// Environment name, where API is hosted.

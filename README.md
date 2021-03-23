@@ -3,7 +3,7 @@ A collection of additional functionality to Asp.Net Core framework for building 
 
 ## Description
 
-There are few functionality extensions provided in package, allowing to better handle some task handling, when creating REST API in Asp.net Core.
+There are few functionality extensions provided in package, allowing to better handle some task implenetations, when creating REST API in Asp.net Core framework.
 
 These include:
 
@@ -103,7 +103,7 @@ See [more extensive documentation](Documentation/ConfiogurationValidation.md) on
 
 ### Root page
 
-Default ASP.Net API provides no visible output in browser when its root is opened. Salix.AspNetCore.Utilites include simple page to show in stead of empty (usually even - 404 error) with some simple data on API.
+Default ASP.Net API provides no visible output in browser when its root is opened. Salix.AspNetCore.Utilites include simple page to show in stead of empty (usually even - 404 error) with some simple data on API. It does not require full MVC stack (views, razor) to have them, so API stays in controller-only mode.
 
 Here is example of such page from Sample solution:
 
@@ -112,7 +112,8 @@ Here is example of such page from Sample solution:
 
 ### Health check / test page
 
-Looking at HealthCheck Json output can be problematic to grasp necessary information right away. Utilities can provide visual page for such overview, something like this:
+**NOTE:** This functionality should be implemented *only* if you have at least one HelathCheck implemented.
+ASP.NET HealthCheck provides only JSON endpoint for health checking, but looking at HealthCheck Json output can be problematic for human eye to grasp necessary information right away. This page can provide visual colored cues for such overview, something like this:
 
 ![Health check and testing page](Documentation/health-check-page.JPG)
 
