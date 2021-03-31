@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -22,10 +22,7 @@ namespace Sample.AspNet5.Logic
         }
 
         public SampleDataValidationException(string message, List<ValidatedProperty> validationErrors)
-            : base(message)
-        {
-            this.ValidationErrors = validationErrors;
-        }
+            : base(message) => this.ValidationErrors = validationErrors;
 
         public SampleDataValidationException(string message, Exception innerException)
             : base(message, innerException)

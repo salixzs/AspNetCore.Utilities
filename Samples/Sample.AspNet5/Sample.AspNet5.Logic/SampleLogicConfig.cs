@@ -1,11 +1,11 @@
-using System.Net.Mail;
-using Salix.AspNetCore.Utilities;
+using System.Collections.Generic;
+using ConfigurationValidation;
 
 namespace Sample.AspNet5.Logic
 {
     /// <summary>
-    /// Configuration for some BUsiness Logic component.
-    /// Logic references only Salix.AspNetCore.Utilities.Abstractions "package".
+    /// Configuration for some Business Logic component.
+    /// Logic project should reference only lightwight Salix.AspNetCore.Utilities.Abstractions.
     /// </summary>
     public class SampleLogicConfig : IValidatableConfiguration
     {
@@ -13,40 +13,40 @@ namespace Sample.AspNet5.Logic
         public string SomeName { get; set; }
         public string SomeEndpoint { get; set; }
         public string SomeEmail { get; set; }
+        public string SomeIp { get; set; }
 
         /// <summary>
-        /// This method is getting called by ASP.NET Startup Filter (provided in package) automatically when API starts.
+        /// Performs the validation of this configuration object.
+        /// Returns empty list if no problems found, otherwise list contains validation problems.
         /// </summary>
-        public void Validate()
+        public IEnumerable<ConfigurationValidationItem> Validate()
         {
-            // Simple cases
-            if (this.SomeValue == 0)
-            {
-                throw new ConfigurationValidationException(nameof(SampleLogicConfig), nameof(this.SomeValue), "SomeValue should not be default value (0).");
-            }
+            // Helper to collect and perform validations
+            var validations = new ConfigurationValidationCollector<SampleLogicConfig>(this);
 
-            if (string.IsNullOrEmpty(this.SomeName))
-            {
-                throw new ConfigurationValidationException(nameof(SampleLogicConfig), nameof(this.SomeName), "Value cannot be empty.");
-            }
+            // Here are validations
+            validations.ValidateNotZero(c => c.SomeValue, "Configuration should not contain default value (<0).");
+            validations.ValidateNotNullOrEmpty(c => c.SomeName, "Configuration should specify value for Name.");
+            validations.ValidateUri(c => c.SomeEndpoint, "External API endpoint is incorrect");
+            validations.ValidateEmail(c => c.SomeEmail, "E-mail address is wrong.");
+            validations.ValidateIpV4Address(c => c.SomeIp, "IP address is not valid.");
+            validations.ValidatePublicIpV4Address(c => c.SomeIp, "IP address is not a public IP address.");
 
-            // You can use regex or any other value checking functionality.
+            // Generic methods, expecting boolean outcome of Linq expression
+            validations.ValidateMust(c => c.SomeEndpoint.StartsWith("https", System.StringComparison.OrdinalIgnoreCase), nameof(this.SomeEndpoint), "Enpoint is not SSL secured.");
+            validations.ValidateMust(c => c.SomeEndpoint.EndsWith("/", System.StringComparison.OrdinalIgnoreCase), nameof(this.SomeEndpoint), "Enpoint should end with shash /.");
+            validations.ValidateMust(c =>
+                c.SomeName.Contains("sparta", System.StringComparison.OrdinalIgnoreCase)
+                && c.SomeValue > 10,
+                nameof(this.SomeEndpoint),
+                "Combined validations failed.");
 
-            // Fancy validators
-            if (!System.Uri.IsWellFormedUriString(this.SomeEndpoint, System.UriKind.Absolute))
-            {
-                throw new ConfigurationValidationException(nameof(SampleLogicConfig), nameof(this.SomeEndpoint), "URL for configuration value seems to be missing or wrong.");
-            }
+            // Syntactic sugar
+            validations.ValidateStartsWith(c => c.SomeEndpoint, "https", "Enpoint is not SSL secured.");
+            validations.ValidateEndsWith(c => c.SomeEndpoint, "/", "Enpoint is no SSL secured.");
 
-            try
-            {
-                // Will throw exception if string does not contain valid e-mail address.
-                var email = new MailAddress(this.SomeEmail);
-            }
-            catch
-            {
-                throw new ConfigurationValidationException(nameof(SampleLogicConfig), nameof(this.SomeEmail), "E-mail address seems to be missing or incorrect.");
-            }
+            // Returning all found validation problems
+            return validations.Result;
         }
     }
 }

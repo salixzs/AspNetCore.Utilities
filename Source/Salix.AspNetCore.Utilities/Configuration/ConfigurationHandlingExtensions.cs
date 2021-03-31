@@ -1,3 +1,4 @@
+using ConfigurationValidation;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +14,7 @@ namespace Salix.AspNetCore.Utilities
         /// </summary>
         /// <param name="services">The services - ASP.NET IoC container.</param>
         public static IServiceCollection AddConfigurationValidation(this IServiceCollection services) =>
-            services.AddTransient<IStartupFilter, SettingsValidationStartupFilter>();
+            services.AddTransient<IStartupFilter, ConfigurationValidationStartupFilter>();
 
         /// <summary>
         /// Registers a configuration instance which <typeparamref name="TConfigSection" /> will bind against, and registers as a validatble setting.

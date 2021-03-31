@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
 
 namespace Salix.AspNetCore.Utilities
 {
@@ -32,7 +32,7 @@ namespace Salix.AspNetCore.Utilities
             string result = "{}";
             if (report != null)
             {
-                result = JsonConvert.SerializeObject(new
+                result = JsonSerializer.Serialize(new
                 {
                     status = report.Status.ToString(),
                     checks = report.Entries.Select(e => new
@@ -47,7 +47,8 @@ namespace Salix.AspNetCore.Utilities
                             value = d.Value.ToString(),
                         }),
                     }),
-                });
+                },
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true });
             }
 
             context.Response.ContentType = "application/json";
@@ -89,9 +90,9 @@ namespace Salix.AspNetCore.Utilities
                 return null;
             }
 
-            var stackTraceFrames = exception.StackTrace.Split(new string[] { "[\r\n]" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] stackTraceFrames = exception.StackTrace.Split(new string[] { "[\r\n]" }, StringSplitOptions.RemoveEmptyEntries);
             var resultingStackTrace = new StringBuilder();
-            foreach (var frame in stackTraceFrames)
+            foreach (string frame in stackTraceFrames)
             {
                 if (frame.IndexOf(":line", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {

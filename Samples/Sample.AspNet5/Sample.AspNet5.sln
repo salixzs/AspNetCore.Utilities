@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReferencedNuGetProjects", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Salix.AspNetCore.Utilities", "..\..\Source\Salix.AspNetCore.Utilities\Salix.AspNetCore.Utilities.csproj", "{3FECE3F0-1EE4-465F-AC3A-9E0A73876585}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Salix.AspNetCore.Utilities.Abstractions", "..\..\Source\Salix.AspNetCore.Utilities.Abstractions\Salix.AspNetCore.Utilities.Abstractions.csproj", "{4E269184-F10D-49D6-B637-A57792F5336C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,17 +29,12 @@ Global
 		{3FECE3F0-1EE4-465F-AC3A-9E0A73876585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FECE3F0-1EE4-465F-AC3A-9E0A73876585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FECE3F0-1EE4-465F-AC3A-9E0A73876585}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E269184-F10D-49D6-B637-A57792F5336C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E269184-F10D-49D6-B637-A57792F5336C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E269184-F10D-49D6-B637-A57792F5336C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E269184-F10D-49D6-B637-A57792F5336C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3FECE3F0-1EE4-465F-AC3A-9E0A73876585} = {D3B93CC9-54DE-426E-91C4-54FD08B5A07B}
-		{4E269184-F10D-49D6-B637-A57792F5336C} = {D3B93CC9-54DE-426E-91C4-54FD08B5A07B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {122E51BC-254A-4079-8E0E-DBFFD2913F9C}

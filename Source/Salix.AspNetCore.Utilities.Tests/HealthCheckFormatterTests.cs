@@ -1,15 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Newtonsoft.Json;
+using Xunit;
+
 namespace Salix.AspNetCore.Utilities.Tests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using FluentAssertions;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Newtonsoft.Json;
-    using Xunit;
-
     [ExcludeFromCodeCoverage]
     public class HealthCheckFormatterTests
     {
@@ -19,10 +19,10 @@ namespace Salix.AspNetCore.Utilities.Tests
             var httpContext = new DefaultHttpContext();
             httpContext.Response.Body = new MemoryStream();
 
-            HealthCheckFormatter.JsonResponseWriter(httpContext, this.CreateHealthReport(false), false);
+            HealthCheckFormatter.JsonResponseWriter(httpContext, CreateHealthReport(false), false);
             httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(httpContext.Response.Body);
-            var streamText = reader.ReadToEnd();
+            string streamText = reader.ReadToEnd();
             streamText.Should().NotBeNullOrEmpty();
             httpContext.Response.ContentType.Should().Be("application/json");
 
@@ -47,10 +47,10 @@ namespace Salix.AspNetCore.Utilities.Tests
             var httpContext = new DefaultHttpContext();
             httpContext.Response.Body = new MemoryStream();
 
-            HealthCheckFormatter.JsonResponseWriter(httpContext, this.CreateHealthReport(true), true);
+            HealthCheckFormatter.JsonResponseWriter(httpContext, CreateHealthReport(true), true);
             httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(httpContext.Response.Body);
-            var streamText = reader.ReadToEnd();
+            string streamText = reader.ReadToEnd();
             streamText.Should().NotBeNullOrEmpty();
             ApiHealth errObj = JsonConvert.DeserializeObject<ApiHealth>(streamText);
             errObj.Should().NotBeNull();
@@ -58,7 +58,7 @@ namespace Salix.AspNetCore.Utilities.Tests
             errObj.Checks.Should().HaveCount(1);
             errObj.Checks[0].Exception.Should().NotBeNull();
             errObj.Checks[0].Exception.Message.Should().Be("Testable problem");
-            errObj.Checks[0].Exception.Type.Should().Be("ApiException");
+            errObj.Checks[0].Exception.Type.Should().Be("ApplicationException");
             errObj.Checks[0].Exception.InnerException.Should().Be("Goin' deeper");
             errObj.Checks[0].Exception.StackTrace.Should().NotBeNullOrEmpty();
             errObj.Checks[0].Exception.StackTrace.Should().Contain("CreateHealthReport(Boolean addException)");
@@ -70,10 +70,10 @@ namespace Salix.AspNetCore.Utilities.Tests
             var httpContext = new DefaultHttpContext();
             httpContext.Response.Body = new MemoryStream();
 
-            HealthCheckFormatter.JsonResponseWriter(httpContext, this.CreateHealthReport(true), false);
+            HealthCheckFormatter.JsonResponseWriter(httpContext, CreateHealthReport(true), false);
             httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(httpContext.Response.Body);
-            var streamText = reader.ReadToEnd();
+            string streamText = reader.ReadToEnd();
             streamText.Should().NotBeNullOrEmpty();
             ApiHealth errObj = JsonConvert.DeserializeObject<ApiHealth>(streamText);
             errObj.Should().NotBeNull();
@@ -81,22 +81,22 @@ namespace Salix.AspNetCore.Utilities.Tests
             errObj.Checks.Should().HaveCount(1);
             errObj.Checks[0].Exception.Should().NotBeNull();
             errObj.Checks[0].Exception.Message.Should().Be("Testable problem");
-            errObj.Checks[0].Exception.Type.Should().Be("ApiException");
+            errObj.Checks[0].Exception.Type.Should().Be("ApplicationException");
             errObj.Checks[0].Exception.InnerException.Should().Be("Goin' deeper");
             errObj.Checks[0].Exception.StackTrace.Should().BeNullOrEmpty();
         }
 
-        private HealthReport CreateHealthReport(bool addException)
+        private static HealthReport CreateHealthReport(bool addException)
         {
-            ApiException exc = null;
+            ApplicationException exc = null;
             if (addException)
             {
                 try
                 {
                     // To get stack trace
-                    throw new ApiException("Testable problem", new Exception("Goin' deeper"));
+                    throw new ApplicationException("Testable problem", new Exception("Goin' deeper"));
                 }
-                catch (ApiException e)
+                catch (ApplicationException e)
                 {
                     exc = e;
                 }
@@ -120,5 +120,29 @@ namespace Salix.AspNetCore.Utilities.Tests
                 },
                 TimeSpan.FromMilliseconds(3757));
         }
+    }
+
+    // Helper classes to deserialize Health check result
+    public class ApiHealth
+    {
+        public string Status { get; set; }
+        public List<ApiHealthCheck> Checks { get; set; } = new List<ApiHealthCheck>();
+    }
+
+    public class ApiHealthCheck
+    {
+        public string Key { get; set; }
+        public string Status { get; set; }
+        public string Description { get; set; }
+        public ApiExceptionData Exception { get; set; }
+        public List<KeyValuePair<string, object>> Data { get; set; } = new List<KeyValuePair<string, object>>();
+    }
+
+    public class ApiExceptionData
+    {
+        public string Message { get; set; }
+        public string Type { get; set; }
+        public string InnerException { get; set; }
+        public string StackTrace { get; set; }
     }
 }

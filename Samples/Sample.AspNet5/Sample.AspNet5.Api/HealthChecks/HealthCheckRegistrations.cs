@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ConfigurationValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
@@ -19,12 +20,11 @@ namespace Sample.AspNet5.Api.HealthChecks
         /// </summary>
         /// <param name="services">ASP.Net IoC container (services).</param>
         /// <param name="isDevelopment">Flag, indicating whether API runs in developer mode - can add more infromation to health checks.</param>
-        public static void AddApiHealthChecks(this IServiceCollection services, bool isDevelopment)
-        {
+        public static void AddApiHealthChecks(this IServiceCollection services, bool isDevelopment) =>
             services.AddHealthChecks()
+                .Add(new HealthCheckRegistration("Configuration", sp => new ConfigurationHealthCheck(sp.GetServices<IValidatableConfiguration>(), isDevelopment), HealthStatus.Unhealthy, null, TimeSpan.FromSeconds(3)))
                 .Add(new HealthCheckRegistration("Database", sp => new DummyDatabaseHealthCheck(isDevelopment), HealthStatus.Unhealthy, null, TimeSpan.FromSeconds(10)))
                 .Add(new HealthCheckRegistration("ExtApi", sp => new DummyExternalApiHealthCheck(isDevelopment), HealthStatus.Unhealthy, null, TimeSpan.FromSeconds(5)));
-        }
 
         /// <summary>
         /// Provides formatted Json response for health check endpoint

@@ -1,41 +1,48 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- === General properties ===-->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <RootNamespace>Salix.AspNetCore.Utilities</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <!-- === NuGet package description properties ===-->
   <PropertyGroup Label="NuGet properties">
+    <Authors>Anrijs Vitolins;GitHub contributors</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Product>Salix.AspNetCore.Utilities</Product>
-    <Authors>Anrijs Vitolins</Authors>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugSymbols>true</DebugSymbols>
+    <PackageTags>aspnet;aspnetcore;api;configuration;healthcheck</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>config-validation.png</PackageIcon>
     <Description>
-      Core functionalities found in each (REST) API implementation with ASP.NET Core 3+ framework.
-      Provides:
-        1) Error Handler (JSON object details on handled/unhandled exceptions),
-        2) Configuration settings (appsettings.json) can be made validatable, 
-        3) HealthCheck customizations
+Core functionalities which should exist in each (REST) API implementation with ASP.NET Core 3+ framework.
+Provides:
+  1) Global Error Handler (JSON object details on unhandled exceptions),
+  2) HealthCheck customizations,
+  3) Simple root page and healthcheck results page (without full MVC stack)
+  4) ConfigurationValidation handlers and extensions (startup filter, death page, healthcheck), 
     </Description>
-    <Copyright>MIT</Copyright>
-    <PackageTags>api;core;healthcheck</PackageTags>
-    <PackageProjectUrl>======= GitHub =======</PackageProjectUrl>
-    <NeutralLanguage>en</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/salixzs/AspNetCore.Utilities</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/salixzs/AspNetCore.Utilities</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-      Updated NuGet packages to 3.11.1 (18-Jan-2021) to align with API upgrades.
+Initial release providing global JSON error handler, healthcheck formatter, root page, healthcheck page, ConfigurationValidation handlers.
     </PackageReleaseNotes>
-    <Version>1.2.4</Version>
-    <AssemblyVersion>1.2.4.0</AssemblyVersion>
-    <FileVersion>1.2.4.0</FileVersion>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->
   <ItemGroup>
+    <PackageReference Include="ConfigurationValidation" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -44,17 +51,14 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.11" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.11" />
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup>
 
   <!-- === Solution project dependencies ===-->
-  <ItemGroup>
-    <ProjectReference Include="..\Salix.AspNetCore.Utilities.Abstractions\Salix.AspNetCore.Utilities.Abstractions.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Update="Pages\Html.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -69,4 +73,15 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="../../utilities.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  
+  <!-- Making internal class/methods visible to test solution-->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
 </Project>

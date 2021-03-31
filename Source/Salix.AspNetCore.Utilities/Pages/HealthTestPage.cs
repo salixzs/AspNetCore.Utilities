@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -15,19 +15,19 @@ namespace Salix.AspNetCore.Utilities
         /// Retrieves contents of Health checking page with filled HealthReport data in human readable format.
         /// </summary>
         /// <param name="healthReport">AspNet built-in Health report / results.</param>
-        /// <param name="originalHealthTestEndpoit">Health test endpoint exposing JSON result (standard, provided by Asp.Net).</param>
+        /// <param name="originalHealthTestEndpoint">Health test endpoint exposing JSON result (standard, provided by Asp.Net).</param>
         /// <param name="testingLinks">Collection of custom links to show additinally on this page.</param>
-        public static string GetContents(HealthReport healthReport, string originalHealthTestEndpoit, List<HealthTestPageLink> testingLinks = null)
+        public static string GetContents(HealthReport healthReport, string originalHealthTestEndpoint, List<HealthTestPageLink> testingLinks = null)
         {
-            var healthPage = Pages.Html.health;
+            string healthPage = Pages.Html.health;
             healthPage = healthPage
-                .Replace("{HealthEndpoint}", originalHealthTestEndpoit)
+                .Replace("{HealthEndpoint}", originalHealthTestEndpoint)
                 .Replace("<div id=\"hc\"></div>", PrepareHealthReport(healthReport));
 
             if (testingLinks != null && testingLinks.Count > 0)
             {
-                StringBuilder links = new StringBuilder();
-                foreach (var link in testingLinks)
+                var links = new StringBuilder();
+                foreach (HealthTestPageLink link in testingLinks)
                 {
                     links.Append($"<li><a href='{link.TestEndpoint}'>{link.Name}</a> - {link.Description}</li>");
                 }
@@ -43,7 +43,7 @@ namespace Salix.AspNetCore.Utilities
         /// <param name="healthResult">The health result.</param>
         private static string PrepareHealthReport(HealthReport healthResult)
         {
-            var poorManRazor = new System.Text.StringBuilder("<p>Overall health status: ");
+            var poorManRazor = new StringBuilder("<p>Overall health status: ");
             switch (healthResult.Status)
             {
                 case HealthStatus.Unhealthy:
@@ -54,6 +54,8 @@ namespace Salix.AspNetCore.Utilities
                     break;
                 case HealthStatus.Healthy:
                     poorManRazor.Append("<span style=\"color:#5DEC50\">");
+                    break;
+                default:
                     break;
             }
 
@@ -77,6 +79,8 @@ namespace Salix.AspNetCore.Utilities
                         break;
                     case HealthStatus.Healthy:
                         poorManRazor.AppendLine("<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABqUlEQVRYR2NkGGDAOMD2M4w6gG4h4BUQYMDIwOSwdcO6CcjRjuEA34CAAEYO1tn/f/4VoTR9qM/ybgCZ8fPZp1cP6g+VMTAwNm7esG4BXgf4RYa+kS+xEOaQ5afUfrj+R70nGP79/rt7dd98N3RDMUMgMOi/xkwvqln+cuU1hp9PPjHIFpk39oingkMEfxRQ0QEfjz1heL3lNoNijQ0DEycLfR3w4/FHhifTzzHIZBoxgKLzRvo2hs3r12GEOE2i4O+33wwPWo4wiPioMvBbyYBDnK4OACU6dhk+BvFwLXh0080BsEQnV2yBktjo4gDkRMfMxUp9B7zdc5+BW10InKjQAXqiQ5enSgjg8iG2REcTB4AMBcXxD2DBIo8Ux9gSHc0cADIY2UJciY6mDgAF+X1gPudWE2b4eustuKRDT3Q0dQDIcEKJjuYOAFnw6803BjYRLqIqLqrkAqJswqFo1AGjIUB0CPjHhj+SKzCTpWabEJRlH/aceLtp+WqMhi72VjEn65z/P/4KU5LqkfUy8bA+/vv5Z9yWDRsOoJtJt34BLs+MOmDAQwAAFdYXMCaGdjIAAAAASUVORK5CYII=\" align=\"top\" width=\"24\" />");
+                        break;
+                    default:
                         break;
                 }
 

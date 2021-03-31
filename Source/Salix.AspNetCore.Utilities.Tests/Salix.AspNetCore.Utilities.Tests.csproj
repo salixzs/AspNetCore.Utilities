@@ -9,6 +9,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <NoWarn>CA1707;CA1305;CA2201;IDE0058</NoWarn>
   </PropertyGroup>
 
   <!-- === NuGet package description properties ===-->

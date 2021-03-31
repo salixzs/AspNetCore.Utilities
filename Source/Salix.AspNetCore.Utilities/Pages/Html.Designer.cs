@@ -62,6 +62,33 @@ namespace Salix.AspNetCore.Utilities.Pages {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Application Errors&lt;/title&gt;
+        ///    &lt;style&gt;
+        ///      body{
+        ///        font-family: &quot;Segoe UI&quot;, Roboto, Arial, sans-serif;
+        ///        font-size: 1rem;
+        ///        font-weight: 400;
+        ///        line-height: 1.5;
+        ///        background-color: rgb(255, 255, 240);
+        ///        color: black;
+        ///        padding: 1em;
+        ///        padding-top: 0;
+        ///      }
+        ///      h1, h2, h3, h4 {
+        ///        font-family: &quot;Segoe UI Light&quot;, Robo [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string config_errors {
+            get {
+                return ResourceManager.GetString("config_errors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html lang=&quot;en&quot;&gt;
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;

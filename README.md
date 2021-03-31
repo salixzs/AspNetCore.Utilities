@@ -3,13 +3,13 @@ A collection of additional functionality to Asp.Net Core framework for building 
 
 ## Description
 
-There are few functionality extensions provided in package, allowing to better handle some task implenetations, when creating REST API in Asp.net Core framework.
+There are few functionality extensions provided in package, allowing to better handle some task implementations when creating REST API in Asp.net Core framework.
 
 These include:
 
 * **Global Exception handler** (Json error) 
 * **Health check formatter**
-* **Configuration validation**
+* **[ConfigurationValidation](https://github.com/salixzs/ConfigurationValidation) handlers**
 * **Home page & Health page** (w/o full MVC stack)
 
 Package is built on .Net Standard 2.0. It is tested by using within Asp.Net Core 5 (on .Net 5) API. Sample solution is added to demonstrate its usage.
@@ -93,13 +93,24 @@ Example response:
 
 See [more extensive documentation](Documentation/HealthCheckFormatter.md) on how to use this functionality.
 
-### Configuration validation
+### [ConfigurationValidation](https://github.com/salixzs/ConfigurationValidation) handlers
 
-Provides abstract interface and service registration functionalities to check configuration values, loaded from all possible sources into `IConfiguration` from appsettings.json, user secrets, environment variables and other defined sources.
+Extends configuration class validations, provided by package [ConfigurationValidation](https://www.nuget.org/packages/ConfigurationValidation/) ([Repo](https://github.com/salixzs/ConfigurationValidation)).
 
-Special exception is thrown, when configuration (sections) are not passing their validations already during API startup routines to avoid nasty runtime exceptions due to mis-configuration.
+It implements necessary registration extensions for your configuration classes and three different handlers of validation results.
 
-See [more extensive documentation](Documentation/ConfiogurationValidation.md) on how to use this functionality.
+#### IStartupFilter
+Checks configuration objects during app startup and throws exception (preventing app from starting up).
+
+#### Configuration Error page
+Implemented as middleware component, similar to "UseDeveloperErrorPage", which returns "yellow screen of death" for your application when configuration validation failed. Application itself will not work, but you can see in browser (when open app in it) this error page.
+
+![Root page example](Documentation/config-error.JPG)
+
+#### HealthCheck
+Standard Asp.Net HealthCheck solution to include in application health checking routines.
+
+See [more extensive documentation](Documentation/ConfigurationValidation.md) on how to use this functionality.
 
 ### Root page
 

@@ -1,9 +1,10 @@
+using System;
+using System.Linq;
+using ConfigurationValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Salix.AspNetCore.Utilities;
 using Sample.AspNet5.Logic;
-using System;
-using System.Linq;
 
 namespace Sample.AspNet5.Api.Middleware
 {
@@ -38,6 +39,20 @@ namespace Sample.AspNet5.Api.Middleware
                                 PropertyName = failure.PropertyName,
                                 AttemptedValue = failure.AppliedValue
                             }));
+            }
+
+            if (exception is ConfigurationValidationException configurationException)
+            {
+                apiError.Status = 500;
+                apiError.ErrorType = ApiErrorType.ConfigurationError;
+                foreach (ConfigurationValidationItem configurationValidation in configurationException.ValidationData)
+                {
+                    apiError.ValidationErrors.Add(new ApiDataValidationError
+                    {
+                        PropertyName = $"{configurationValidation.ConfigurationSection}:{configurationValidation.ConfigurationItem}",
+                        Message = configurationValidation.ValidationMessage
+                    });
+                }
             }
 
             if (exception is AccessViolationException securityException)

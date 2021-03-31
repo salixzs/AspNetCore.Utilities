@@ -55,19 +55,14 @@ namespace Salix.AspNetCore.Utilities
         /// Determines whether the specified <see cref="object" /> is equal to this instance.
         /// </summary>
         /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
-        public override bool Equals(object obj)
-        {
-            return !(obj is ApiDataValidationError) ? false : this.Equals((ApiDataValidationError)obj);
-        }
+        public override bool Equals(object obj) => obj is ApiDataValidationError error && this.Equals(error);
 
         /// <summary>
         /// Determines whether the specified <see cref="ValidationError" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The other ValidationError.</param>
-        public bool Equals(ApiDataValidationError other)
-        {
-            return this.PropertyName != other.PropertyName ? false : this.AttemptedValue.ToString() == other.AttemptedValue.ToString();
-        }
+        public bool Equals(ApiDataValidationError other) =>
+            this.PropertyName == other.PropertyName && this.AttemptedValue.ToString() == other.AttemptedValue.ToString();
 
         /// <summary>
         /// Displays object main properties in Debug screen. (Only for development purposes).

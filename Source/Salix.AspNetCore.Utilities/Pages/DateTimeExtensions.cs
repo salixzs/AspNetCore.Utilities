@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace Salix.AspNetCore.Utilities
@@ -6,6 +6,7 @@ namespace Salix.AspNetCore.Utilities
     /// <summary>
     /// Extension methods for DateTime objects.
     /// </summary>
+#pragma warning disable CA1305 // Specify IFormatProvider
     internal static class DateTimeExtensions
     {
         /// <summary>
@@ -78,11 +79,11 @@ namespace Salix.AspNetCore.Utilities
             {
                 if (startDate.Month == endDate.Value.Month)
                 {
-                    str.AppendFormat("{0}. ā€” {1}. {2:MMMM}", startDate.Day, endDate.Value.Day, startDate);
+                    str.AppendFormat("{0}. – {1}. {2:MMMM}", startDate.Day, endDate.Value.Day, startDate);
                 }
                 else
                 {
-                    str.AppendFormat("{0} ā€” {1}", startDate.ToString("M"), endDate.Value.ToString("M"));
+                    str.AppendFormat("{0} – {1}", startDate.ToString("M"), endDate.Value.ToString("M"));
                 }
 
                 if (startDate.Year != DateTime.Now.Year)
@@ -98,7 +99,7 @@ namespace Salix.AspNetCore.Utilities
             {
                 if (startDate.Date == DateTime.Now.Date)
                 {
-                    return $"Today ({startDate.ToString("t")})";
+                    return $"Today ({startDate:t})";
                 }
 
                 if (howManyDaysAsText > 0)
@@ -110,7 +111,7 @@ namespace Salix.AspNetCore.Utilities
 
                     if (startDate.Date == DateTime.Now.Date.AddDays(-1))
                     {
-                        return $"Yesterday ({startDate.ToString("t")})";
+                        return $"Yesterday ({startDate:t})";
                     }
                 }
 
@@ -163,4 +164,5 @@ namespace Salix.AspNetCore.Utilities
             return str.ToString();
         }
     }
+#pragma warning restore CA1305 // Specify IFormatProvider
 }

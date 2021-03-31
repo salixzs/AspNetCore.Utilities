@@ -9,6 +9,10 @@
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ConfigurationValidation" Version="1.0.0" />
+  </ItemGroup>
+
   <!-- ===== This normally would be NuGet package reference ===== -->
   <ItemGroup Label="NuGetReference">
     <ProjectReference Include="..\..\..\Source\Salix.AspNetCore.Utilities\Salix.AspNetCore.Utilities.csproj" />

@@ -4,25 +4,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Salix.AspNetCore.Utilities
 {
     /// <summary>
     /// Handles API errors (HTTP code > 399) as special Error object returned from API.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("ErrorHandler")]
+    [System.Diagnostics.DebuggerDisplay("Global Error Handler")]
     public abstract class ApiJsonExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        protected readonly ILogger<ApiJsonExceptionMiddleware> _logger;
         private readonly bool _showStackTrace;
+
+        protected ILogger<ApiJsonExceptionMiddleware> Logger { get; }
 
         /// <summary>
         /// Middleware for intercepting unhandled exceptions and returning error object with appropriate status code.
@@ -38,7 +38,7 @@ namespace Salix.AspNetCore.Utilities
         public ApiJsonExceptionMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, bool showStackTrace = false)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
-            _logger = logger;
+            this.Logger = logger;
             _showStackTrace = showStackTrace;
         }
 
@@ -60,20 +60,20 @@ namespace Salix.AspNetCore.Utilities
                 // We can't do anything if the response has already started, just abort.
                 if (httpContext.Response.HasStarted)
                 {
-                    _logger.LogError(exc, "Unhandled exception occurred of type {ExceptionType} with message: \"{ExceptionMessage}\". Response started - no JSON handler is launched!", exc.GetType().Name, exc.Message);
+                    this.Logger.LogError(exc, "Unhandled exception occurred of type {ExceptionType} with message: \"{ExceptionMessage}\". Response started - no JSON handler is launched!", exc.GetType().Name, exc.Message);
                     throw;
                 }
 
                 ApiError errorObject = this.CreateErrorObject(exc, httpContext.Response?.StatusCode);
-                errorObject.RequestedUrl = httpContext.Features.Get<IHttpRequestFeature>()?.RawTarget ?? httpContext.Request.Path.ToString();
+                errorObject.RequestedUrl = httpContext.Features.Get<IHttpRequestFeature>()?.RawTarget ?? httpContext.Request?.Path.ToString();
                 if (errorObject.ErrorType == ApiErrorType.DataValidationError)
                 {
-                    _logger.LogError(exc, "Data validation exception occurred with message: \"{ExceptionMessage}\".", exc.Message);
+                    this.Logger.LogError(exc, "Data validation exception occurred with message: \"{ExceptionMessage}\".", exc.Message);
                     await WriteExceptionAsync(httpContext, errorObject, 400).ConfigureAwait(false);
                 }
                 else
                 {
-                    _logger.LogError(
+                    this.Logger.LogError(
                         exc,
                         "Unhandled exception occurred of type {ExceptionType} with message: \"{ExceptionMessage}\".",
                         exc.GetType().Name,
@@ -153,7 +153,7 @@ namespace Salix.AspNetCore.Utilities
             response.Headers[HeaderNames.Pragma] = "no-cache";
             response.Headers[HeaderNames.Expires] = "-1";
             response.Headers.Remove(HeaderNames.ETag);
-            await response.WriteAsync(JsonConvert.SerializeObject(errorData, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })).ConfigureAwait(false);
+            await response.WriteAsync(JsonSerializer.Serialize(errorData, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true }));
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Salix.AspNetCore.Utilities
                 string filename = frame.GetFileName();
 
                 // We are interested only in own code and not in Middleware, which is THIS class (Namespace).
-                if (filename?.Contains("Api.Core") != false && filename?.Contains(".Tests") != false)
+                if (filename?.Contains("Salix.AspNetCore.Utilities") != false && filename?.Contains(".Tests") != false)
                 {
                     // Still include all for tests
                     if (filename == null || !filename.Contains(".Tests"))

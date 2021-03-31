@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Salix.AspNetCore.Utilities;
 
 namespace Sample.AspNet5.Logic
 {
@@ -16,7 +15,9 @@ namespace Sample.AspNet5.Logic
             await Task.Delay(100).ConfigureAwait(false);
 
             // Something bad happened in logic.
-            throw new ApiException("This is thrown on purpose.");
+#pragma warning disable CA2201 // Do not raise reserved exception types
+            throw new ApplicationException("This is thrown on purpose.");
+#pragma warning restore CA2201 // Do not raise reserved exception types
         }
 
         /// <summary>

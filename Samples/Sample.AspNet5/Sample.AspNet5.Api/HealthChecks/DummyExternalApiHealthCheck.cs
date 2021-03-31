@@ -1,33 +1,32 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Sample.AspNet5.Api.HealthChecks
 {
     /// <summary>
-    /// Provides means of checking whether database connection is OK and whether it is correct database.
+    /// Provides means of checking whether External API connection is OK.
     /// </summary>
     public class DummyExternalApiHealthCheck : IHealthCheck
     {
         private readonly bool _showAuthenticationData;
 
         /// <summary>
-        /// Provides means of checking whether extApi connection is OK and whether it works OK.
+        /// Provides means of checking whether External API connection is OK.
         /// </summary>
         /// <param name="showConnectionString">When true - shows authentication data as Health ckeck data.</param>
-        /// <remarks>Normlly inject helth check routine/class and use it to actualy check connection.</remarks>
-        public DummyExternalApiHealthCheck(bool showAuthenticationData)
-        {
-            _showAuthenticationData = showAuthenticationData;
-        }
+        /// <remarks>Normally inject helth check routine/class and use it to actually check connection.</remarks>
+        public DummyExternalApiHealthCheck(bool showAuthenticationData) => _showAuthenticationData = showAuthenticationData;
 
         /// <summary>
         /// Performs actual connection try and reports success in expected format.
         /// </summary>
         /// <param name="context">Health checking context (framework).</param>
         /// <param name="cancellationToken">Operation cancellation token.</param>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously - expected by framework
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var healthCheckData = new Dictionary<string, object>
             {

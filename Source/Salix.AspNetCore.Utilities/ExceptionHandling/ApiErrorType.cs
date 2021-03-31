@@ -26,6 +26,11 @@ namespace Salix.AspNetCore.Utilities
         DataValidationError = 3,
 
         /// <summary>
+        /// There are problems with configuration of application.
+        /// </summary>
+        ConfigurationError = 4,
+
+        /// <summary>
         /// General security related exception / error.
         /// </summary>
         SecurityError = 10,
