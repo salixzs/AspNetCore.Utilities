@@ -2,7 +2,7 @@
 
   <!-- === General properties ===-->
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -38,7 +38,6 @@
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->
   <ItemGroup>
-    <ProjectReference Include="..\Salix.AspNetCore.Utilities.Abstractions\Salix.AspNetCore.Utilities.Abstractions.csproj" />
     <ProjectReference Include="..\Salix.AspNetCore.Utilities\Salix.AspNetCore.Utilities.csproj" />
   </ItemGroup>
 
