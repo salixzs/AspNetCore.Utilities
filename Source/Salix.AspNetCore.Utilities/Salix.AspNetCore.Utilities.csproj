@@ -11,6 +11,7 @@
 
   <!-- === NuGet package description properties ===-->
   <PropertyGroup Label="NuGet properties">
+    <PackageId>Salix.AspNetCore.Utilities</PackageId>
     <Authors>Anrijs Vitolins;GitHub contributors</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
