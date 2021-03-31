@@ -199,14 +199,14 @@ namespace Salix.AspNetCore.Utilities
                 // Code to remove common part from filenames (Namespace folder)
                 if (commonPathParts.Length == 0)
                 {
-                    commonPathParts = filename.Split('\\');
+                    commonPathParts = filename.Split(System.IO.Path.DirectorySeparatorChar);
                     Array.Resize(ref commonPathParts, commonPathParts.Length - 2);
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(filename))
                     {
-                        foreach (string pathPart in filename.Split('\\'))
+                        foreach (string pathPart in filename.Split(System.IO.Path.DirectorySeparatorChar))
                         {
                             if (!commonPathParts.Contains(pathPart))
                             {
@@ -221,7 +221,7 @@ namespace Salix.AspNetCore.Utilities
             {
                 foreach (string pathPart in commonPathParts)
                 {
-                    frames[frameIndex] = frames[frameIndex].Replace(pathPart + "\\", string.Empty);
+                    frames[frameIndex] = frames[frameIndex].Replace(pathPart + System.IO.Path.DirectorySeparatorChar, string.Empty);
                 }
             }
 
