@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <PackageTags>aspnet;aspnetcore;api;configuration;healthcheck</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIcon>config-validation.png</PackageIcon>
+    <PackageIcon>utilities.png</PackageIcon>
     <Description>
 Core functionalities which should exist in each (REST) API implementation with ASP.NET Core 3+ framework.
 Provides:

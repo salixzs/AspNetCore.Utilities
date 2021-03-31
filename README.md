@@ -105,7 +105,7 @@ Checks configuration objects during app startup and throws exception (preventing
 #### Configuration Error page
 Implemented as middleware component, similar to "UseDeveloperErrorPage", which returns "yellow screen of death" for your application when configuration validation failed. Application itself will not work, but you can see in browser (when open app in it) this error page.
 
-![Root page example](Documentation/config-error.JPG)
+![Configuration error page](Documentation/config-error.jpg)
 
 #### HealthCheck
 Standard Asp.Net HealthCheck solution to include in application health checking routines.

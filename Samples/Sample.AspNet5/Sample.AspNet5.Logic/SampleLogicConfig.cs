@@ -5,7 +5,6 @@ namespace Sample.AspNet5.Logic
 {
     /// <summary>
     /// Configuration for some Business Logic component.
-    /// Logic project should reference only lightwight Salix.AspNetCore.Utilities.Abstractions.
     /// </summary>
     public class SampleLogicConfig : IValidatableConfiguration
     {

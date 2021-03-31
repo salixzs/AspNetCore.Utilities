@@ -30,7 +30,7 @@ services.AddConfigurationValidation();
 
 This approach will not prevent application from starting up, but will prevent its normal functionality. In reality (if configuration is incorrect) every URL which should be served by your application will return this yellow screen of death:
 
-![Config error page](./config-error.JPG)
+![Config error page](./config-error.jpg)
 
 *(Page will not be shown if you also enabled IStartupFilter - it will take precedence and fail application in its startup.)*
 
