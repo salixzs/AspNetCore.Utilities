@@ -8,7 +8,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Salix.AspNetCore.Utilities
 {
     /// <summary>
-    /// Uses <see cref="ConfigurationValidation"/> functionalities to verify application configuration.
+    /// Uses <see cref="ConfigurationValidation"/> functionality to verify application configuration.
     /// </summary>
     public class ConfigurationHealthCheck : IHealthCheck
     {
@@ -16,9 +16,9 @@ namespace Salix.AspNetCore.Utilities
         private readonly bool _showConfigurationValues;
 
         /// <summary>
-        /// Uses <see cref="ConfigurationValidation"/> functionalities to verify application configuration.
+        /// Uses <see cref="ConfigurationValidation"/> functionality to verify application configuration.
         /// </summary>
-        /// <param name="showConfigurationValues">When true - shows used configuration values as part of Health ckeck data.</param>
+        /// <param name="showConfigurationValues">When true - shows used configuration values as part of Health check data.</param>
         public ConfigurationHealthCheck(IEnumerable<IValidatableConfiguration> configurations, bool showConfigurationValues)
         {
             _configurations = configurations;

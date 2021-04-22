@@ -16,7 +16,7 @@ namespace Salix.AspNetCore.Utilities
         /// </summary>
         /// <param name="healthReport">AspNet built-in Health report / results.</param>
         /// <param name="originalHealthTestEndpoint">Health test endpoint exposing JSON result (standard, provided by Asp.Net).</param>
-        /// <param name="testingLinks">Collection of custom links to show additinally on this page.</param>
+        /// <param name="testingLinks">Collection of custom links to show additionally on this page.</param>
         public static string GetContents(HealthReport healthReport, string originalHealthTestEndpoint, List<HealthTestPageLink> testingLinks = null)
         {
             string healthPage = Pages.Html.health;

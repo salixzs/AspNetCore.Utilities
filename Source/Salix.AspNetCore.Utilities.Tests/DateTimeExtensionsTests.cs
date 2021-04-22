@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using FluentAssertions;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace Salix.AspNetCore.Utilities.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class DateTimeExtensionsTests
     {
         [Theory]

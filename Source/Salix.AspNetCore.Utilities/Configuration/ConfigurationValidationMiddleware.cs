@@ -41,7 +41,7 @@ namespace Salix.AspNetCore.Utilities
 
             if (failures.Count == 0)
             {
-                _logger.LogDebug($"All configurations are valid.");
+                _logger.LogDebug("All configurations are valid.");
                 await _next(httpContext);
                 return;
             }

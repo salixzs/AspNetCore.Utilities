@@ -4,6 +4,7 @@ using ConfigurationValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Salix.AspNetCore.Utilities;
+using Salix.AspNetCore.Utilities.ExceptionHandling;
 using Sample.AspNet5.Logic;
 
 namespace Sample.AspNet5.Api.Middleware
@@ -14,6 +15,10 @@ namespace Sample.AspNet5.Api.Middleware
     public class ApiJsonErrorMiddleware : ApiJsonExceptionMiddleware
     {
         public ApiJsonErrorMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, bool showStackTrace) : base(next, logger, showStackTrace)
+        {
+        }
+
+        public ApiJsonErrorMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, ApiJsonExceptionOptions options) : base(next, logger, options)
         {
         }
 

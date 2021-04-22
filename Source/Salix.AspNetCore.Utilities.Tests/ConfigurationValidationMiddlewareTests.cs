@@ -106,10 +106,13 @@ namespace Salix.AspNetCore.Utilities.Tests
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class TestValidConfig : IValidatableConfiguration
     {
         public IEnumerable<ConfigurationValidationItem> Validate() => new List<ConfigurationValidationItem>();
     }
+
+    [ExcludeFromCodeCoverage]
     public class TestInvalidConfig : IValidatableConfiguration
     {
         public IEnumerable<ConfigurationValidationItem> Validate() =>

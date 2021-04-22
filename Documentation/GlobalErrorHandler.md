@@ -21,7 +21,15 @@ When package is added to API project, `public abstract class ApiJsonExceptionMid
 /// </summary>
 public class ApiJsonErrorMiddleware : ApiJsonExceptionMiddleware
 {
-    public ApiJsonErrorMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, bool showStackTrace) : base(next, logger, showStackTrace)
+    // use either this simplified constructor
+    public ApiJsonErrorMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, bool showStackTrace)
+        : base(next, logger, showStackTrace)
+    {
+    }
+    
+    // or use this constructor to supply extended options
+    public ApiJsonErrorMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, ApiJsonExceptionOptions options)
+        : base(next, logger, options)
     {
     }
 }
@@ -32,12 +40,15 @@ After it is created, you can register it in API Startup.cs `Configure` method li
 ```csharp
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
-    app.UseMiddleware<ApiJsonErrorMiddleware>(env.IsDevelopment());
+    app.UseMiddleware<ApiJsonErrorMiddleware>(env.IsDevelopment()); // simple constructor
     // ... everything else
 }
 ```
 
-The only parameter controls whether StackTrace is shown to consumer. In example above we control it by environment variable and then it is shown during API development, but hidden in any other environment. If you put constant true/false in stead - it is either shown always or hidden always.
+The only parameter in simple constructor controls whether StackTrace is shown to consumer. In example above we control it by environment variable and then it is shown during API development, but hidden in any other environment. If you put constant true/false in stead - it is either shown always or hidden always.
+
+For options - you can set the same `showStackTrace` boolean and also specify list of stack trace frames to be filtered out from being shown. It is `OmitSources` property, containing list (HashSet) of strings, which should not be a part of file path in stack trace frame.
+For example, if you set it to `new HashSet<string> { "middleware" }`, it will filter out all middleware components (given they have string "middleware" in their file name or in path).
 
 ### Custom exception handling
 If you want to handle (return data on) some specific exceptions, then you should override `HandleSpecialException` method from base class. There you can check whether exception is of this special type and modify returned Json data structure accordingly:

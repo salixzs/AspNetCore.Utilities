@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Sample.AspNet5.Logic
 {
     /// <summary>
-    /// Sample custom data validation exxeption, which can be used to throw in case incoming data is not valid.
+    /// Sample custom data validation exception, which can be used to throw in case incoming data is not valid.
     /// </summary>
     [Serializable]
     public class SampleDataValidationException : Exception

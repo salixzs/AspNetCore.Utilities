@@ -83,7 +83,7 @@ namespace Salix.AspNetCore.Utilities
                 }
                 else
                 {
-                    str.AppendFormat("{0} – {1}", startDate.ToString("M"), endDate.Value.ToString("M"));
+                    str.AppendFormat("{0:M} – {1:M}", startDate, endDate.Value);
                 }
 
                 if (startDate.Year != DateTime.Now.Year)

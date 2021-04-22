@@ -56,7 +56,7 @@ namespace Salix.AspNetCore.Utilities
         }
 
         /// <summary>
-        /// Preformats Exception object to simpler form, leaving only necessary information.
+        /// Pre-formats Exception object to simpler form, leaving only necessary information.
         /// For Non-DEV environments will not add stacktrace and data dictionary.
         /// </summary>
         /// <param name="exception">Exception to simplify.</param>

@@ -16,7 +16,7 @@ namespace Salix.AspNetCore.Utilities
     {
         private const char DefaultNestedTypeDelimiter = '+';
 
-        private static readonly Dictionary<Type, string> BuiltInTypeNames = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> BuiltInTypeNames = new()
         {
             { typeof(void), "void" },
             { typeof(bool), "bool" },
@@ -84,7 +84,7 @@ namespace Salix.AspNetCore.Utilities
             }
             else
             {
-                var name = options.FullName ? type.FullName : type.Name;
+                string name = options.FullName ? type.FullName : type.Name;
                 builder.Append(name);
 
                 if (options.NestedTypeDelimiter != DefaultNestedTypeDelimiter)

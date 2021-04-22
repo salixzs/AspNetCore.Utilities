@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Sample.AspNet5.Logic
 {
@@ -12,7 +12,7 @@ namespace Sample.AspNet5.Logic
         /// <summary>
         /// Dummy method in business domain logic, which ends up throwing database exception.
         /// </summary>
-        Task DatabaseProlemLogic();
+        Task DatabaseProblemLogic();
 
         /// <summary>
         /// Dummy method in business domain logic, which ends up throwing data validation exception.

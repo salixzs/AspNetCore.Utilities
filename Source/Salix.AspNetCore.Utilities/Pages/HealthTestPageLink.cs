@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace Salix.AspNetCore.Utilities
 {
@@ -9,7 +9,7 @@ namespace Salix.AspNetCore.Utilities
     public class HealthTestPageLink
     {
         /// <summary>
-        /// Enspoint to open when page link is clicked. Can be relative (to API) or even absolute from external resource.
+        /// Endpoint to open when page link is clicked. Can be relative (to API) or even absolute from external resource.
         /// </summary>
         public string TestEndpoint { get; set; }
 

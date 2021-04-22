@@ -65,7 +65,7 @@ namespace Salix.AspNetCore.Utilities
         /// <summary>
         /// List of validation errors, when Error is data validation error.
         /// </summary>
-        public List<ApiDataValidationError> ValidationErrors { get; set; } = new List<ApiDataValidationError>();
+        public List<ApiDataValidationError> ValidationErrors { get; set; } = new();
 
         /// <summary>
         /// Displays object main properties in Debug screen. (Only for development purposes).

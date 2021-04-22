@@ -23,7 +23,7 @@ namespace Sample.AspNet5.Logic
         /// <summary>
         /// Dummy method in business domain logic, which ends up throwing database exception.
         /// </summary>
-        public async Task DatabaseProlemLogic()
+        public async Task DatabaseProblemLogic()
         {
             // mimic some work in logic.
             await Task.Delay(100).ConfigureAwait(false);

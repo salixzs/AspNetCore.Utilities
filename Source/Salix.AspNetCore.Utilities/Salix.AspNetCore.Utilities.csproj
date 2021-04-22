@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- === General properties ===-->
   <PropertyGroup>
@@ -18,14 +18,14 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugSymbols>true</DebugSymbols>
-    <PackageTags>aspnet;aspnetcore;api;configuration;healthcheck</PackageTags>
+    <PackageTags>aspnet;aspnetcore;api;configuration;healthcheck;error handler</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>utilities.png</PackageIcon>
     <Description>
 Core functionalities which should exist in each (REST) API implementation with ASP.NET Core 3+ framework.
 Provides:
   1) Global Error Handler (JSON object details on unhandled exceptions),
-  2) HealthCheck customizations,
+  2) HealthCheck customizations (formatter),
   3) Simple root page and healthcheck results page (without full MVC stack)
   4) ConfigurationValidation handlers and extensions (startup filter, death page, healthcheck), 
     </Description>
@@ -34,11 +34,13 @@ Provides:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-Initial release providing global JSON error handler, healthcheck formatter, root page, healthcheck page, ConfigurationValidation handlers.
+Introduced options for Error handling - added possibility to put filters for stack trace frames.
+Made stacktrace retrieval more stable for ErrorHandler.
+Typo fixes in documentation (intellisense).
     </PackageReleaseNotes>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->

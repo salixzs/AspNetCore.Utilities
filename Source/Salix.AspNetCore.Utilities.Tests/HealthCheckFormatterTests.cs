@@ -123,12 +123,14 @@ namespace Salix.AspNetCore.Utilities.Tests
     }
 
     // Helper classes to deserialize Health check result
+    [ExcludeFromCodeCoverage]
     public class ApiHealth
     {
         public string Status { get; set; }
         public List<ApiHealthCheck> Checks { get; set; } = new List<ApiHealthCheck>();
     }
 
+    [ExcludeFromCodeCoverage]
     public class ApiHealthCheck
     {
         public string Key { get; set; }
@@ -138,6 +140,7 @@ namespace Salix.AspNetCore.Utilities.Tests
         public List<KeyValuePair<string, object>> Data { get; set; } = new List<KeyValuePair<string, object>>();
     }
 
+    [ExcludeFromCodeCoverage]
     public class ApiExceptionData
     {
         public string Message { get; set; }

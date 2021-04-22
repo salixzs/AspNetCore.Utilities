@@ -16,15 +16,12 @@ namespace Sample.AspNet5.Api
         public static int Main(string[] args)
         {
             // Normally should use Serilog for extensibility.
-            var loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder
+            var loggerFactory = LoggerFactory.Create(builder => builder
                     .AddFilter("Microsoft", LogLevel.Warning)
                     .AddFilter("System", LogLevel.Warning)
                     .AddFilter("Sample.AspNet5.Program", LogLevel.Debug)
                     .AddDebug()
-                    .AddConsole();
-            });
+                    .AddConsole());
             var logger = loggerFactory.CreateLogger<Program>();
 
             logger.LogInformation("Starting up API.");
@@ -39,7 +36,7 @@ namespace Sample.AspNet5.Api
         /// Creates the host builder object.
         /// </summary>
         /// <param name="args">The arguments from command line.</param>
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
                     .UseStartup<Startup>()

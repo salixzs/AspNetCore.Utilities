@@ -15,8 +15,8 @@ namespace Sample.AspNet5.Api.HealthChecks
         /// <summary>
         /// Provides means of checking whether External API connection is OK.
         /// </summary>
-        /// <param name="showConnectionString">When true - shows authentication data as Health ckeck data.</param>
-        /// <remarks>Normally inject helth check routine/class and use it to actually check connection.</remarks>
+        /// <param name="showConnectionString">When true - shows authentication data as Health check data.</param>
+        /// <remarks>Normally inject health check routine/class and use it to actually check connection.</remarks>
         public DummyExternalApiHealthCheck(bool showAuthenticationData) => _showAuthenticationData = showAuthenticationData;
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace Sample.AspNet5.Api.HealthChecks
 
             if (_showAuthenticationData)
             {
-                healthCheckData.Add("User", "username from config");
-                healthCheckData.Add("Password", "password from config");
-                healthCheckData.Add("Token", "Secret token from config");
+                healthCheckData.Add("User", "Could be shown");
+                healthCheckData.Add("Password", "Can be shown, too");
+                healthCheckData.Add("Token", "Some Shmoken");
             };
 
             // TODO: Here you would want to call some things to actually check external api connection.

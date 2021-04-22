@@ -16,7 +16,7 @@ namespace Sample.AspNet5.Api.HealthChecks
         /// Provides means of checking whether database connection is OK and is it a correct database.
         /// </summary>
         /// <param name="showConnectionString">When true - shows connection string as Health ckeck data.</param>
-        /// <remarks>Normally inject helth check routine/class and use it to actually check connection.</remarks>
+        /// <remarks>Normally inject health check routine/class and use it to actually check connection.</remarks>
         public DummyDatabaseHealthCheck(bool showConnectionString) => _showConnectionString = showConnectionString;
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace Salix.AspNetCore.Utilities
             services.AddTransient<IStartupFilter, ConfigurationValidationStartupFilter>();
 
         /// <summary>
-        /// Registers a configuration instance which <typeparamref name="TConfigSection" /> will bind against, and registers as a validatble setting.
+        /// Registers a configuration instance which <typeparamref name="TConfigSection" /> will bind against, and registers as a validatable setting.
         /// Additionally registers the configuration object directly with the DI container, so can be retrieved without referencing IOptions.
         /// </summary>
         /// <typeparam name="TConfigSection">The strongly typed configuration settings - options.</typeparam>
@@ -33,7 +33,7 @@ namespace Salix.AspNetCore.Utilities
         }
 
         /// <summary>
-        /// Registers a configuration instance which <typeparamref name="TConfigSection" /> will bind against, and registers as a validatble setting.
+        /// Registers a configuration instance which <typeparamref name="TConfigSection" /> will bind against, and registers as a validatable setting.
         /// Additionally registers the configuration object directly with the DI container, so can be retrieved without referencing IOptions.
         /// Returns registered section as strongly typed object, so it can be used by calling party right away.
         /// </summary>

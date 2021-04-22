@@ -28,16 +28,9 @@ namespace Salix.AspNetCore.Utilities
                 ? indexHtml.Replace("{Built}", "---")
                 : indexHtml.Replace("{Built}", buildData.BuiltTime.ToHumanDateString());
 
-            if (!string.IsNullOrEmpty(buildData.SwaggerPageAddress))
-            {
-                indexHtml = indexHtml
-                    .Replace("{Swagger}", $"<a href=\"{buildData.SwaggerPageAddress}\">Swagger</a>");
-            }
-            else
-            {
-                indexHtml = indexHtml
-                    .Replace("{Swagger}", string.Empty);
-            }
+            indexHtml = indexHtml.Replace("{Swagger}", !string.IsNullOrEmpty(buildData.SwaggerPageAddress)
+                ? $"<a href=\"{buildData.SwaggerPageAddress}\">Swagger</a>"
+                : string.Empty);
 
             return indexHtml;
         }
@@ -50,27 +43,14 @@ namespace Salix.AspNetCore.Utilities
         public static string ExtractVersionFromAssembly(Assembly assembly, int partsToReturn = 2)
         {
             string[] version = assembly.GetName().Version.ToString().Split('.');
-            if (version.Length == 0)
+            return version.Length switch
             {
-                return "Not determined";
-            }
-
-            if (version.Length > 3 && partsToReturn == 4)
-            {
-                return $"{version[0]}.{version[1]}.{version[2]}.{version[3]}";
-            }
-
-            if (version.Length > 2 && partsToReturn >= 3)
-            {
-                return $"{version[0]}.{version[1]}.{version[2]}";
-            }
-
-            if (version.Length > 1 && partsToReturn >= 2)
-            {
-                return $"{version[0]}.{version[1]}";
-            }
-
-            return version[0];
+                0 => "Not determined",
+                > 3 when partsToReturn == 4 => $"{version[0]}.{version[1]}.{version[2]}.{version[3]}",
+                > 2 when partsToReturn >= 3 => $"{version[0]}.{version[1]}.{version[2]}",
+                > 1 when partsToReturn >= 2 => $"{version[0]}.{version[1]}",
+                _ => version[0]
+            };
         }
 
         /// <summary>

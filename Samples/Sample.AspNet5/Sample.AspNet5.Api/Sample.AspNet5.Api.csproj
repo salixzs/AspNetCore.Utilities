@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     
-    <!--To use included custom AssemblyInfo.cs file (and prevent autogenerate default during compilation)-->
+    <!--To use included custom AssemblyInfo.cs file (and prevent auto-generate default during compilation)-->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <!--Allow wildcards in version number inside AssemblyInfo.cs == generates magic numbers to specifu compilation datetime. -->
+    <!--Allow wildcards in version number inside AssemblyInfo.cs == generates magic numbers to specify compilation datetime. -->
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 

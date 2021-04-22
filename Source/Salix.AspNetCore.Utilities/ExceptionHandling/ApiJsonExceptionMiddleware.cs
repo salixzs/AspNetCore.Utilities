@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,17 +11,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using Salix.AspNetCore.Utilities.ExceptionHandling;
 
 namespace Salix.AspNetCore.Utilities
 {
     /// <summary>
     /// Handles API errors (HTTP code > 399) as special Error object returned from API.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Global Error Handler")]
+    [DebuggerDisplay("Global Error Handler")]
     public abstract class ApiJsonExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly bool _showStackTrace;
+        private readonly ApiJsonExceptionOptions _options;
 
         protected ILogger<ApiJsonExceptionMiddleware> Logger { get; }
 
@@ -39,7 +41,27 @@ namespace Salix.AspNetCore.Utilities
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             this.Logger = logger;
-            _showStackTrace = showStackTrace;
+            _options = new ApiJsonExceptionOptions
+            {
+                ShowStackTrace = showStackTrace
+            };
+            _options.OmitSources.Add("ApiJsonExceptionMiddleware.cs");
+        }
+
+
+        /// <summary>
+        /// Middleware for intercepting unhandled exceptions and returning error object with appropriate status code.
+        /// </summary>
+        /// <param name="next">The next configured middleware in chain (setup in Startup.cs).</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="options">Set options for Error Handling.</param>
+        /// <exception cref="ArgumentNullException">Next step is not defined (should not ever happen).</exception>
+        public ApiJsonExceptionMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, ApiJsonExceptionOptions options)
+        {
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            this.Logger = logger;
+            _options = options;
+            _options.OmitSources.Add("ApiJsonExceptionMiddleware.cs");
         }
 
         /// <summary>
@@ -86,12 +108,12 @@ namespace Salix.AspNetCore.Utilities
 
         /// <summary>
         /// Handler for Data Validation exception in API.
-        /// Should be overriden in implementing class to fill with necessary data into ApiError object.
+        /// Should be overridden in implementing class to fill with necessary data into ApiError object.
         /// </summary>
-        /// <param name="apiError"></param>
-        /// <param name="validationException"></param>
+        /// <param name="apiError">Prepared API Error (as reference) to append any handled error information.</param>
+        /// <param name="exception">Exception thrown in application.</param>
         /// <returns>Updated <paramref name="apiError"/>.</returns>
-#pragma warning disable IDE0060 // Remove unused parameter - will be overriden
+#pragma warning disable IDE0060 // Remove unused parameter - will be overridden.
         protected virtual ApiError HandleSpecialException(ApiError apiError, Exception exception) => apiError;
 
         /// <summary>
@@ -129,9 +151,17 @@ namespace Salix.AspNetCore.Utilities
                 }
             }
 
-            if (_showStackTrace)
+            if (_options.ShowStackTrace)
             {
-                errorData.StackTrace = GetStackTrace(exception);
+                // As there can be any kind of errors retrieving stack trace
+                try
+                {
+                    errorData.StackTrace = GetStackTrace(exception, _options.OmitSources);
+                }
+                catch (Exception ex)
+                {
+                    errorData.StackTrace = new List<string> { "Error getting original stack trace: " + ex.Message };
+                }
             }
 
             return errorData;
@@ -160,7 +190,7 @@ namespace Salix.AspNetCore.Utilities
         /// Gets the stack trace of exception in suitable format.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        private static List<string> GetStackTrace(Exception exception)
+        private static List<string> GetStackTrace(Exception exception, HashSet<string> omitContaining)
         {
             var frames = new List<string>();
             if (exception == null)
@@ -168,60 +198,87 @@ namespace Salix.AspNetCore.Utilities
                 return frames;
             }
 
-            const bool needFileInfo = true;
-            var stackTrace = new System.Diagnostics.StackTrace(exception, needFileInfo);
-            System.Diagnostics.StackFrame[] stackFrames = stackTrace.GetFrames();
+            var stackTrace = new StackTrace(exception, true);
+            StackFrame[] stackFrames = stackTrace.GetFrames();
             if (stackFrames == null)
             {
                 return frames;
             }
 
-            // Common path parts (root folder etc.) is filled in loop below - to remove them later to shorten stack trace and increase readability.
-            string[] commonPathParts = Array.Empty<string>();
-            for (int i = 0; i < stackFrames.Length; i++)
+            // Common path parts (root folder etc.) is filled in loop below -
+            // to remove them later to shorten stack trace and increase readability.
+            var folderNameOccurrences = new Dictionary<string, FolderOccurrenceCount>();
+            foreach (StackFrame frame in stackFrames)
             {
-                System.Diagnostics.StackFrame frame = stackFrames[i];
-                string filename = frame.GetFileName();
-
-                // We are interested only in own code and not in Middleware, which is THIS class (Namespace).
-                if (filename?.Contains("Salix.AspNetCore.Utilities") != false && filename?.Contains(".Tests") != false)
+                string filePath = frame.GetFileName();
+                string method = GetMethodSignature(frame.GetMethod()) ?? "?";
+                if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(method))
                 {
-                    // Still include all for tests
-                    if (filename == null || !filename.Contains(".Tests"))
+                    continue;
+                }
+
+                // Skip frames containing given omit strings
+                if (omitContaining.Any(omit => filePath.IndexOf(omit, StringComparison.OrdinalIgnoreCase) > 0))
+                {
+                    continue;
+                }
+
+                frames.Add($"at {method} in {filePath}: line {frame.GetFileLineNumber():D}");
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    continue;
+                }
+
+                // Experience shows these can be both \ and / in single StackTrace
+                char directorySeparatorChar = '\\';
+                if (filePath.IndexOf(directorySeparatorChar) < 0)
+                {
+                    directorySeparatorChar = '/';
+                    if (filePath.IndexOf(directorySeparatorChar) < 0)
                     {
+                        // Only file name
                         continue;
                     }
                 }
 
-                string method = GetMethodSignature(frame.GetMethod()) ?? "?";
-                frames.Add($"at {method} in {filename ?? "??"}: line {frame.GetFileLineNumber():D}");
-
-                // Code to remove common part from filenames (Namespace folder)
-                if (commonPathParts.Length == 0)
+                var filepathFolders = filePath.Split(directorySeparatorChar).ToList();
+                if (filepathFolders.Count < 3)
                 {
-                    commonPathParts = filename.Split(System.IO.Path.DirectorySeparatorChar);
-                    Array.Resize(ref commonPathParts, commonPathParts.Length - 2);
+                    continue;
                 }
-                else
+
+                // Remove filename and 1 folder before it from entire file path (so they are preserved)
+                filepathFolders.RemoveRange(filepathFolders.Count - 2, 2);
+                var nonEmptyFolderList = filepathFolders.Where(f => !string.IsNullOrWhiteSpace(f)).ToList();
+                foreach (string folderName in nonEmptyFolderList)
                 {
-                    if (!string.IsNullOrEmpty(filename))
+                    if (folderNameOccurrences.ContainsKey(folderName))
                     {
-                        foreach (string pathPart in filename.Split(System.IO.Path.DirectorySeparatorChar))
-                        {
-                            if (!commonPathParts.Contains(pathPart))
-                            {
-                                commonPathParts = RemoveFromArray(commonPathParts, pathPart);
-                            }
-                        }
+                        folderNameOccurrences[folderName].Occurrences++;
+                    }
+                    else
+                    {
+                        folderNameOccurrences.Add(folderName, new FolderOccurrenceCount(directorySeparatorChar));
                     }
                 }
             }
 
-            for (int frameIndex = 0; frameIndex < frames.Count; frameIndex++)
+            // Remove folders, which are encountered only once (so they are left in stacktrace)
+            var singleUseFolders = folderNameOccurrences
+                .Where(o => o.Value.Occurrences <= 1)
+                .ToList();
+            foreach (KeyValuePair<string, FolderOccurrenceCount> item in singleUseFolders)
             {
-                foreach (string pathPart in commonPathParts)
+                folderNameOccurrences.Remove(item.Key);
+            }
+
+            for (var frameIndex = 0; frameIndex < frames.Count; frameIndex++)
+            {
+                foreach (KeyValuePair<string, FolderOccurrenceCount> pathPart in folderNameOccurrences)
                 {
-                    frames[frameIndex] = frames[frameIndex].Replace(pathPart + System.IO.Path.DirectorySeparatorChar, string.Empty);
+                    frames[frameIndex] = frames[frameIndex]
+                        .Replace(pathPart.Key + pathPart.Value.DirectorySeparatorChar,
+                            string.Empty);
                 }
             }
 
@@ -253,7 +310,7 @@ namespace Salix.AspNetCore.Utilities
             if (method.IsGenericMethod)
             {
                 string genericArguments = string.Join(", ", method.GetGenericArguments()
-                    .Select(arg => TypeNameHelper.GetTypeDisplayName(arg, fullName: false, includeGenericParameterNames: true)));
+                    .Select(arg => TypeNameHelper.GetTypeDisplayName(arg, false, true)));
                 methodName += "<" + genericArguments + ">";
             }
 
@@ -272,22 +329,17 @@ namespace Salix.AspNetCore.Utilities
                 {
                     prefix = "out ";
                 }
-                else if (parameterType?.IsByRef == true)
+                else if (parameterType.IsByRef)
                 {
                     prefix = "ref ";
                 }
 
-                string parameterTypeString = "?";
-                if (parameterType != null)
+                if (parameterType.IsByRef)
                 {
-                    if (parameterType.IsByRef)
-                    {
-                        parameterType = parameterType.GetElementType();
-                    }
-
-                    parameterTypeString = TypeNameHelper.GetTypeDisplayName(parameterType, fullName: false, includeGenericParameterNames: true);
+                    parameterType = parameterType.GetElementType();
                 }
 
+                string parameterTypeString = TypeNameHelper.GetTypeDisplayName(parameterType, false, true);
                 methodName += $"{prefix}{parameterTypeString} {method.GetParameters()[i].Name}";
             }
 
@@ -306,19 +358,10 @@ namespace Salix.AspNetCore.Utilities
             }
 
             MethodInfo[] methods = parentType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            if (methods == null)
-            {
-                return retMethod;
-            }
 
             foreach (MethodInfo candidateMethod in methods)
             {
                 IEnumerable<StateMachineAttribute> attributes = candidateMethod.GetCustomAttributes<StateMachineAttribute>();
-                if (attributes == null)
-                {
-                    continue;
-                }
-
                 foreach (StateMachineAttribute sma in attributes)
                 {
                     if (sma.StateMachineType == declaringType)
@@ -332,23 +375,22 @@ namespace Salix.AspNetCore.Utilities
         }
 
         /// <summary>
-        /// Removes all instances of [itemToRemove] from array [original]
-        /// Returns the new array, without modifying [original] directly.
+        /// Internal DTO for repeating folder counting
         /// </summary>
-        /// <typeparam name="T">Type of elements in array.</typeparam>
-        /// <param name="original">Array to modify.</param>
-        /// <param name="itemToRemove">item (its value) to remove from array.</param>
-        public static T[] RemoveFromArray<T>(T[] original, T itemToRemove)
+        private class FolderOccurrenceCount
         {
-            int numIdx = Array.IndexOf(original, itemToRemove);
-            if (numIdx == -1)
-            {
-                return original;
-            }
+            /// <summary>
+            /// Holds count of folder occurrences in stack trace filePaths.
+            /// </summary>
+            public int Occurrences { get; set; } = 1;
 
-            var tmp = new List<T>(original);
-            tmp.RemoveAt(numIdx);
-            return tmp.ToArray();
+            /// <summary>
+            /// Stores directory separator char, used in this particular path (could be / or \).
+            /// </summary>
+            public char DirectorySeparatorChar { get; }
+
+            public FolderOccurrenceCount(char directorySeparatorChar) =>
+                this.DirectorySeparatorChar = directorySeparatorChar;
         }
     }
 }

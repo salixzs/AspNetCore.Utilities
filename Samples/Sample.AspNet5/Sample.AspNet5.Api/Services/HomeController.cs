@@ -121,7 +121,7 @@ namespace Sample.AspNet5.Api.Services
         public async Task ThrowDatabaseException()
         {
             _logger.LogInformation("Within API controller, about to call \"storage/database\".");
-            await _logic.DatabaseProlemLogic();
+            await _logic.DatabaseProblemLogic();
         }
 
         [HttpGet("/api/sample/notyet")]

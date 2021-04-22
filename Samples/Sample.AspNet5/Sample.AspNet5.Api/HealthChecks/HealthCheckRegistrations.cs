@@ -15,7 +15,7 @@ namespace Sample.AspNet5.Api.HealthChecks
         private const string HealthHeckEndpoint = "/api/health";
 
         /// <summary>
-        /// Registers HealtChecking with IoC (services).
+        /// Registers HealthChecking with IoC (services).
         /// Used for easing up Startup.cs methods.
         /// </summary>
         /// <param name="services">ASP.Net IoC container (services).</param>
@@ -29,7 +29,7 @@ namespace Sample.AspNet5.Api.HealthChecks
         /// <summary>
         /// Provides formatted Json response for health check endpoint
         /// </summary>
-        /// <param name="app">Appplication Builder object (from Startup).</param>
+        /// <param name="app">Application Builder object (from Startup).</param>
         /// <param name="isDevelopment">Flag, indicating whether API runs in developer mode - can add more infromation to health checks.</param>
         public static IApplicationBuilder UseApiHealthChecks(this IApplicationBuilder app, bool isDevelopment)
         {
@@ -41,7 +41,7 @@ namespace Sample.AspNet5.Api.HealthChecks
         /// Provides Formatting options to the health check response.
         /// Creates JSON object with plenty of information for DEV and necessary for other environments.
         /// </summary>
-        /// <param name="isDevelopment">Flag to indicate app is running in development environment.</param>
+        /// <param name="isDevelopment">Flag to indicate application is running in development environment.</param>
         private static HealthCheckOptions FormatHealthCheckResponse(bool isDevelopment)
         {
             var opts = new HealthCheckOptions

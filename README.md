@@ -1,6 +1,8 @@
 # Salix.AspNetCore.Utilities
 A collection of additional functionality to Asp.Net Core framework for building better APIs.
 
+[![Build & Tests](https://github.com/salixzs/AspNetCore.Utilities/actions/workflows/build_test.yml/badge.svg?branch=main)](https://github.com/salixzs/ConfigurationValidation/actions/workflows/build_test.yml) [![Nuget version](https://img.shields.io/nuget/v/Salix.AspNetCore.Utilities.svg)](https://www.nuget.org/packages/Salix.AspNetCore.Utilities/) [![NuGet Downloads](https://img.shields.io/nuget/dt/Salix.AspNetCore.Utilities.svg)](https://www.nuget.org/packages/Salix.AspNetCore.Utilities/)
+
 ## Description
 
 There are few functionality extensions provided in package, allowing to better handle some task implementations when creating REST API in Asp.net Core framework.
@@ -133,7 +135,11 @@ See [more extensive documentation](Documentation/Pages.md) on how to use this fu
 
 ## How to use
 
-TBD when NuGet is ready.
+You add `Salix.AspNetCore.Utilities` package to asp.net project use Visual Studio NuGet manager or from command line:
+```plaintext
+PM> Install-Package Salix.AspNetCore.Utilities
+```
+
 
 ## Release notes
 Available [in this link](Documentation/ReleaseNotes.md).

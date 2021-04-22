@@ -234,6 +234,7 @@ namespace Salix.AspNetCore.Utilities.Tests
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class TestExceptionMiddleware : ApiJsonExceptionMiddleware
     {
         public TestExceptionMiddleware(RequestDelegate next, ILogger<ApiJsonExceptionMiddleware> logger, bool showStackTrace = false) : base(next, logger, showStackTrace)
@@ -262,6 +263,7 @@ namespace Salix.AspNetCore.Utilities.Tests
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class TestDataValidationException : Exception
     {
         public List<TestValidatedProperty> ValidationErrors { get; private set; } = new List<TestValidatedProperty>();
@@ -284,6 +286,7 @@ namespace Salix.AspNetCore.Utilities.Tests
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class TestValidatedProperty
     {
         public string PropertyName { get; set; }

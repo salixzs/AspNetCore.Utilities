@@ -31,6 +31,11 @@ namespace Salix.AspNetCore.Utilities
         ConfigurationError = 4,
 
         /// <summary>
+        /// There are problems with external dependency.
+        /// </summary>
+        ExternalError = 5,
+
+        /// <summary>
         /// General security related exception / error.
         /// </summary>
         SecurityError = 10,
