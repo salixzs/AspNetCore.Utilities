@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Salix.AspNetCore.Utilities;
 using Sample.AspNet5.Logic;
 
 namespace Sample.AspNet5.Api
@@ -12,6 +13,7 @@ namespace Sample.AspNet5.Api
         public static void RegisterLogicDependencies(this IServiceCollection services)
         {
             services.AddScoped<ISampleLogic, SampleLogic>();
+            services.AddTransient<IConfigurationValuesLoader, ConfigurationValuesLoader>();
         }
     }
 }

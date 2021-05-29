@@ -16,16 +16,16 @@ namespace Sample.AspNet5.Api
         public static int Main(string[] args)
         {
             // Normally should use Serilog for extensibility.
-            var loggerFactory = LoggerFactory.Create(builder => builder
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder
                     .AddFilter("Microsoft", LogLevel.Warning)
                     .AddFilter("System", LogLevel.Warning)
                     .AddFilter("Sample.AspNet5.Program", LogLevel.Debug)
                     .AddDebug()
                     .AddConsole());
-            var logger = loggerFactory.CreateLogger<Program>();
+            ILogger<Program> logger = loggerFactory.CreateLogger<Program>();
 
             logger.LogInformation("Starting up API.");
-            var host = CreateHostBuilder(args).Build();
+            IHost host = CreateHostBuilder(args).Build();
             logger.LogInformation("Startup finalized. Launching...");
             host.Run();
             logger.LogInformation("API stopped cleanly.");

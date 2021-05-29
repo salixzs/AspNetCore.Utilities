@@ -26,6 +26,8 @@ namespace Sample.AspNet5.Api.Services
         private readonly ISampleLogic _logic;
         private readonly HealthCheckService _healthChecks;
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfigurationValuesLoader _configLoader;
+
         private const string HealthTestEndpoint = "/api/healthtest";
 
         /// <summary>
@@ -35,12 +37,14 @@ namespace Sample.AspNet5.Api.Services
         /// <param name="logic">Demonstration business logic (throwing errors).</param>
         /// <param name="healthChecks">ASP.Net built in health checking services. DO NOT INJECT this, if you do not have Health checks configured in API.</param>
         /// <param name="logger">Logging object.</param>
-        public HomeController(IWebHostEnvironment hostingEnvironment, ISampleLogic logic, HealthCheckService healthChecks, ILogger<HomeController> logger)
+        /// <param name="configLoader">A Helper class to load all existing application/api configured key-value pairs.</param>
+        public HomeController(IWebHostEnvironment hostingEnvironment, ISampleLogic logic, HealthCheckService healthChecks, ILogger<HomeController> logger, IConfigurationValuesLoader configLoader)
         {
             _hostingEnvironment = hostingEnvironment;
             _logic = logic;
             _healthChecks = healthChecks;
             _logger = logger;
+            _configLoader = configLoader;
         }
 
         /// <summary>
@@ -49,30 +53,69 @@ namespace Sample.AspNet5.Api.Services
         [HttpGet("/")]
         public ContentResult Index()
         {
+            // Load filtered configuration items from entire configuration based on given whitelist filter
+            Dictionary<string, string> configurationItems =
+                _configLoader.GetConfigurationValues(new HashSet<string>
+                {
+                    "AllowedHosts", "contentRoot", "Logging", "LogicConfiguration", "DatabaseConnection"
+                });
+
+            // #if !DEBUG <--- Do that only when running not in DEBUG mode
+            Dictionary<string, string> obfuscatedConfig = ObfuscateConfigurationValues(configurationItems);
+            // #endif
+
             var apiAssembly = Assembly.GetAssembly(typeof(Startup));
-            IndexPageValues buildData = new()
-            {
-                ApiName = "Sample API",
-                Description = "Demonstrating capabilities of Salix.AspNetCore.Utilities NuGet package.",
-                HostingEnvironment = _hostingEnvironment.EnvironmentName,
-                Version = IndexPage.ExtractVersionFromAssembly(apiAssembly, 2), // Takes version from asssembly - just first two numbers as specified
-                BuiltTime = IndexPage.ExtractBuildTimeFromAssembly(apiAssembly), // For this to work need non-deterministic AssemblyInfo.cs version set.
-                HealthPageAddress = HealthTestEndpoint, // See operation URL set on action method below!
-            };
+            IndexPage indexPage = new IndexPage("Sample API")
+                .SetDescription("Demonstrating capabilities of Salix.AspNetCore.Utilities NuGet package.")
+                .SetHostingEnvironment(_hostingEnvironment.EnvironmentName)
+                .SetVersionFromAssembly(apiAssembly, 2) // Takes version from assembly - just first two numbers as specified
+                .SetBuildTimeFromAssembly(apiAssembly)  // For this to work need non-deterministic AssemblyInfo.cs version set.
+                .SetHealthPageUrl(HealthTestEndpoint)   // See operation URL set on action method below!
+                .SetSwaggerUrl("/swagger")
+                .SetConfigurationValues(obfuscatedConfig)
+                .IncludeContentFile("build_data.html");
 
-// "Hacking" to understand what mode API is getting compiled.
+            // "Hacking" to understand what mode API is getting compiled.
 #if DEBUG
-            buildData.BuildMode = "#DEBUG (Should not be in production!)";
+            indexPage.SetBuildMode("#DEBUG (Should not be in production!)");
 #else
-            buildData.BuildMode = "Release";
+            indexPage.SetBuildMode("Release");
 #endif
-
             return new ContentResult
             {
                 ContentType = "text/html",
                 StatusCode = (int)HttpStatusCode.OK,
-                Content = IndexPage.GetContents(buildData),
+                Content = indexPage.GetContents(),
             };
+        }
+
+        /// <summary>
+        /// Obfuscates the configuration values for safe showing on index page.
+        /// </summary>
+        /// <param name="configurationItems">The loaded original configuration items.</param>
+        /// <returns>Same list of configuration values, where selected are obfuscated.</returns>
+        private static Dictionary<string, string> ObfuscateConfigurationValues(Dictionary<string, string> configurationItems)
+        {
+            var obfuscated = new Dictionary<string, string>();
+            foreach (KeyValuePair<string, string> original in configurationItems)
+            {
+                if (original.Key.StartsWith("LogicConfiguration/SomeIp", StringComparison.OrdinalIgnoreCase)
+                    || original.Key.StartsWith("LogicConfiguration/SomeEmail", StringComparison.OrdinalIgnoreCase)
+                    || original.Key.StartsWith("LogicConfiguration/SomeArray[1].Id", StringComparison.OrdinalIgnoreCase))
+                {
+                    obfuscated.Add(original.Key, original.Value.HideValuePartially());
+                    continue;
+                }
+
+                if (original.Key.StartsWith("DatabaseConnection", StringComparison.OrdinalIgnoreCase))
+                {
+                    obfuscated.Add(original.Key, original.Value.ObfuscateSqlConnectionString(true));
+                    continue;
+                }
+
+                obfuscated.Add(original.Key, original.Value);
+            }
+            return obfuscated;
         }
 
         /// <summary>

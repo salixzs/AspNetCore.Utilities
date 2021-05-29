@@ -1,87 +1,127 @@
 using System;
-using System.Globalization;
-using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Salix.AspNetCore.Utilities
 {
     /// <summary>
     /// Class to compose landing/index page for API.
     /// </summary>
-    public static class IndexPage
+    public class IndexPage
     {
+        internal IndexPageValues IndexPageOptions { get; private set; } = new IndexPageValues();
+
+        /// <summary>
+        /// Index page with default options/values.
+        /// </summary>
+        public IndexPage() { }
+
+        /// <summary>
+        /// Index page with default options/values and specified name.
+        /// </summary>
+        public IndexPage(string apiName) => this.IndexPageOptions.SetName(apiName);
+
         /// <summary>
         /// Retrieves Index/Landing page as string, containing ready-made HTML.
         /// </summary>
         /// <param name="buildData">Build and API specific data to include in page.</param>
-        public static string GetContents(IndexPageValues buildData)
+        public string GetContents()
         {
+            // {IncludeFile} = <div class="column"></div> or string empty
             string indexHtml = Pages.Html.index;
             indexHtml = indexHtml
-                .Replace("{ApiName}", buildData.ApiName)
-                .Replace("{Description}", buildData.Description)
-                .Replace("{Version}", buildData.Version)
-                .Replace("{Environment}", buildData.HostingEnvironment)
-                .Replace("{Mode}", buildData.BuildMode)
-                .Replace("{HealthTestUrl}", buildData.HealthPageAddress);
+                .Replace("{ApiName}", this.IndexPageOptions.ApiName)
+                .Replace("{Description}", this.IndexPageOptions.Description)
+                .Replace("{Version}", this.IndexPageOptions.Version)
+                .Replace("{Environment}", this.IndexPageOptions.HostingEnvironment)
+                .Replace("{Mode}", this.IndexPageOptions.BuildMode)
+                .Replace("{HealthTestUrl}", this.IndexPageOptions.HealthPageAddress);
 
-            indexHtml = buildData.BuiltTime == DateTime.MinValue
+            indexHtml = this.IndexPageOptions.BuiltTime == DateTime.MinValue
                 ? indexHtml.Replace("{Built}", "---")
-                : indexHtml.Replace("{Built}", buildData.BuiltTime.ToHumanDateString());
+                : indexHtml.Replace("{Built}", this.IndexPageOptions.BuiltTime.ToHumanDateString());
 
-            indexHtml = indexHtml.Replace("{Swagger}", !string.IsNullOrEmpty(buildData.SwaggerPageAddress)
-                ? $"<a href=\"{buildData.SwaggerPageAddress}\">Swagger</a>"
-                : string.Empty);
+            if (!string.IsNullOrEmpty(this.IndexPageOptions.HealthPageAddress) || !string.IsNullOrEmpty(this.IndexPageOptions.SwaggerPageAddress))
+            {
+                var buttons = new StringBuilder("<hr/>");
+                buttons.AppendLine("<p style=\"margin-top:2em;\">");
+
+                if (!string.IsNullOrEmpty(this.IndexPageOptions.HealthPageAddress))
+                {
+                    buttons.AppendLine($"<a href=\"{this.IndexPageOptions.HealthPageAddress}\">Health/Test</a>");
+                }
+
+                if (!string.IsNullOrEmpty(this.IndexPageOptions.SwaggerPageAddress))
+                {
+                    buttons.AppendLine($"<a href=\"{this.IndexPageOptions.SwaggerPageAddress}\">Swagger/Test</a>");
+                }
+
+                indexHtml = indexHtml.Replace("{Buttons}", buttons.ToString());
+            }
+            else
+            {
+                indexHtml = indexHtml.Replace("{Buttons}", string.Empty);
+            }
+
+            indexHtml = string.IsNullOrEmpty(this.IndexPageOptions.IncludeFileName)
+                ? indexHtml
+                    .Replace("{OneColumnStyle}", "min-width:100%;")
+                    .Replace("{IncludeFile}", string.Empty)
+                : indexHtml
+                    .Replace("{OneColumnStyle}", "padding-right: 2rem;")
+                    .Replace("{IncludeFile}", LoadFileContents(this.IndexPageOptions.IncludeFileName));
+
+            indexHtml = this.IndexPageOptions.Configurations != null && this.IndexPageOptions.Configurations.Any()
+                ? indexHtml.Replace("{ConfigValues}", this.GenerateConfigurationsTable())
+                : indexHtml.Replace("{ConfigValues}", "Configuration values are hidden for security purposes.");
 
             return indexHtml;
         }
 
-        /// <summary>
-        /// Retrieves Version number from assembly (usually controlled by AssemblyInfo.cs file).
-        /// </summary>
-        /// <param name="assembly">Assembly, for which to get version number.</param>
-        /// <param name="partsToReturn">How many parts/numbers to return as version (AssemblyInfo can contain 4 by default or custom).</param>
-        public static string ExtractVersionFromAssembly(Assembly assembly, int partsToReturn = 2)
+        private static string LoadFileContents(string includeFileName)
         {
-            string[] version = assembly.GetName().Version.ToString().Split('.');
-            return version.Length switch
+            if (!System.IO.File.Exists(includeFileName))
             {
-                0 => "Not determined",
-                > 3 when partsToReturn == 4 => $"{version[0]}.{version[1]}.{version[2]}.{version[3]}",
-                > 2 when partsToReturn >= 3 => $"{version[0]}.{version[1]}.{version[2]}",
-                > 1 when partsToReturn >= 2 => $"{version[0]}.{version[1]}",
-                _ => version[0]
-            };
+                return $"<div class=\"column\"><h1>Included contents</h1><p>Contents file {includeFileName} not found!</p></div>";
+            }
+
+            if (new System.IO.FileInfo(includeFileName).Length > 51200)
+            {
+                return $"<div class=\"column\"><h1>Included contents</h1><p>Contents file {includeFileName} is too big!</p></div>";
+            }
+
+            string contents = System.IO.File.ReadAllText(includeFileName);
+            if (System.IO.Path.GetExtension(includeFileName).StartsWith(".HTM", StringComparison.OrdinalIgnoreCase))
+            {
+                if (contents.Contains("<body>"))
+                {
+                    contents = Regex.Match(contents, @"(?s)(?<=<body>).+(?=<\/body>)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Value;
+                }
+
+                return $"<div class=\"column\">{contents}</div>";
+            }
+
+            return $"<div class=\"column\"><h1>Included contents</h1><pre>{contents}</pre></div>";
         }
 
-        /// <summary>
-        /// When non-deterministic version number in AssemblyInfo.cs is used
-        /// in format "X.x.*" (X = major version number, x = minor version number, * to fill current datetime as numbers by compiler)
-        /// this method can extract this datetime back as typed.
-        /// </summary>
-        /// <param name="assembly">Assembly with non-deterministic version number (with *) set in AssemblyInfo.cs</param>
-        /// <returns>Extracted Date and Time or current datetime - 1 minute.</returns>
-        public static DateTime ExtractBuildTimeFromAssembly(Assembly assembly)
+        private string GenerateConfigurationsTable()
         {
-            string[] version = assembly.GetName().Version.ToString().Split('.');
-
-            if (version.Length != 4)
+            var builder = new StringBuilder();
+            builder.AppendLine("<table>");
+            builder.AppendLine("<thead>");
+            builder.AppendLine("<tr><th>Key</th><th>Value</th></tr>");
+            builder.AppendLine("</thead>");
+            builder.AppendLine("<tbody>");
+            foreach (KeyValuePair<string, string> cfg in this.IndexPageOptions.Configurations)
             {
-                return DateTime.Now.AddMinutes(-1);
+                builder.AppendLine($"<tr><td>{cfg.Key}</td><td>{cfg.Value}</td></tr>");
             }
+            builder.AppendLine("</tbody>");
+            builder.AppendLine("</table>");
 
-            if (!int.TryParse(version[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int build))
-            {
-                return DateTime.Now.AddMinutes(-1);
-            }
-
-            if (!int.TryParse(version[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int revision))
-            {
-                return DateTime.Now.AddMinutes(-1);
-            }
-
-            return new DateTime(2000, 1, 1)
-                    + new TimeSpan(build, 0, 0, 0)
-                    + TimeSpan.FromSeconds(revision * 2);
+            return builder.ToString();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- === General properties ===-->
   <PropertyGroup>
@@ -34,13 +34,14 @@ Provides:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-Introduced options for Error handling - added possibility to put filters for stack trace frames.
-Made stacktrace retrieval more stable for ErrorHandler.
-Typo fixes in documentation (intellisense).
+Breaking changes to Index page rendering.
+Changed Index page setup routines (fluent setup).
+Added configuration items show on index page.
+Added possibility to include external content file on index page.
     </PackageReleaseNotes>
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->
@@ -50,15 +51,17 @@ Typo fixes in documentation (intellisense).
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.15" />
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="5.0.1" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
   </ItemGroup>
 
   <!-- === Solution project dependencies ===-->

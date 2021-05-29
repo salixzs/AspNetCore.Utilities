@@ -22,4 +22,11 @@
     <ProjectReference Include="..\Sample.AspNet5.Logic\Sample.AspNet5.Logic.csproj" />
   </ItemGroup>
 
+  <!-- ===== This mimics some file to be included in Index page ===== -->
+  <ItemGroup>
+    <None Update="build_data.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

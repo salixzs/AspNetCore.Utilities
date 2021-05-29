@@ -121,7 +121,10 @@ namespace Salix.AspNetCore.Utilities.Pages {
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;{ApiName}&lt;/title&gt;
         ///    &lt;style&gt;
-        ///      body{
+        ///      * {
+        ///        box-sizing: border-box;
+        ///      }
+        ///      body {
         ///        font-family: &quot;Segoe UI&quot;, Roboto, Arial, sans-serif;
         ///        font-size: 1rem;
         ///        font-weight: 400;
@@ -132,8 +135,7 @@ namespace Salix.AspNetCore.Utilities.Pages {
         ///        padding-top: 0;
         ///      }
         ///      h1, h2, h3, h4 {
-        ///        font-family: &quot;Segoe UI Light&quot;, Roboto, Arial, sans-serif;
-        ///        font-weight: 200; [rest of string was truncated]&quot;;.
+        ///        font-family: &quot;Segoe UI Light&quot;, [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string index {
             get {

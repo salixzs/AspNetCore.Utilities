@@ -116,9 +116,13 @@ See [more extensive documentation](Documentation/ConfigurationValidation.md) on 
 
 ### Root page
 
-Default ASP.Net API provides no visible output in browser when its root is opened. Salix.AspNetCore.Utilites include simple page to show in stead of empty (usually even - 404 error) with some simple data on API. It does not require full MVC stack (views, razor) to have them, so API stays in controller-only mode.
+Default Asp.Net API provides no visible output when its root URL is open in browser. If there is no default controller for root path, it returns 404 (not found) error. 
 
-Here is example of such page from Sample solution:
+Salix.AspNetCore.Utilites include simple page renderer to show some technical and monitoring/troubleshooting information, which can be used in HomeController Index action. 
+
+It does not require full MVC stack (views, razor) to have them, so API stays in controller-only mode.
+
+Here is example of such page from Sample solution with all bells and whistles:
 
 ![Root page example](Documentation/root-page.JPG)
 
