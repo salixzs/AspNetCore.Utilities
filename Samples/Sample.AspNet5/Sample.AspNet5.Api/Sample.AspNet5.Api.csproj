@@ -21,8 +21,19 @@
   <ItemGroup Label="Internal project references">
     <ProjectReference Include="..\Sample.AspNet5.Logic\Sample.AspNet5.Logic.csproj" />
   </ItemGroup>
+  
+  <!-- ===== This causes to regenerate build_data.html during build ===== -->
+  <Target Name="CreateBuildReport" AfterTargets="AfterBuild" >
+    <PropertyGroup>
+      <PowerShellCommand Condition=" '$(OS)' == 'Windows_NT' " >powershell</PowerShellCommand>
+      <PowerShellCommand Condition=" '$(OS)' == 'Unix' " >pwsh</PowerShellCommand>
+      <ScriptLocation>$(MSBuildProjectDirectory)\..\BuildScripts\CreateBuildReport.ps1</ScriptLocation>
+      <RequestedBy  Condition="'$(RequestedBy)' == ''">Local user</RequestedBy>
+    </PropertyGroup>
+    <Exec Command="$(PowerShellCommand) -ExecutionPolicy Unrestricted -NoProfile -File $(ScriptLocation) -OS $(OS) -Platform $(Platform) -Configuration &quot;$(Configuration)&quot; -TargetFrameworkVersion &quot;$(TargetFrameworkVersion) ($(MSBuildRuntimeType))&quot; -RequestedBy &quot;$(RequestedBy)&quot;" />
+  </Target>
 
-  <!-- ===== This mimics some file to be included in Index page ===== -->
+  <!-- ===== This forces build_data.html to be copied to compiled output, so Index page can locate it ===== -->
   <ItemGroup>
     <None Update="build_data.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

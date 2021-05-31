@@ -5,5 +5,4 @@ using System.Reflection;
 [assembly: AssemblyDescription("Sample .Net 5.0 API for Salix.AspNetCore.Utilites demonstration")]
 [assembly: AssemblyCompany("Salix")]
 [assembly: AssemblyProduct("Salix.AspNetCore.Utilities")]
-[assembly: AssemblyVersion("2.0.*")]
-
+[assembly: AssemblyVersion("{version}")]

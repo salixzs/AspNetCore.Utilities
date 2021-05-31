@@ -6,11 +6,13 @@ on:
     paths-ignore:
     - '**/README.md'
     - 'Documentation/*'
+    - 'Samples/*'
   pull_request:
     branches: [ main ]
     paths-ignore:
     - '**/README.md'
     - 'Documentation/*'
+    - 'Samples/*'
 
 jobs:
   build:
