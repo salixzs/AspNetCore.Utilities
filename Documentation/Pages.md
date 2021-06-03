@@ -147,6 +147,7 @@ IndexPage indexPage = new IndexPage("Sample API")
 IndexPage indexPage = new IndexPage("Sample API")
     .SetVersion(_versionNumber); // string
 ```
+> Samples project `BuildScripts` folder contains script for custom Version numbering (also based on current date-time)
 
 ##### BuildTime
 It is a DateTime to be set, indicating when API was built. You can change it manually before going to production:
@@ -213,6 +214,8 @@ Possible applications may be:
 * Generated build information/log from build server (beware of sizes)
 * Some information extracted by code or tool
   * e.g. `git log -15 --no-merges --pretty="%h, %aN, %aI, %s"`
+
+> In Samples folder BuildScripts is PowerShell script sample to autogenerate build report with Git history as part of build.
 
 ##### Configuration values
 Although package includes configuration validations, it is very handy to see what exactly API configured from all JSONs (appsettings.json, appsettings.development.json, usersecret.json), Environment vairables, command line, system own configuration values etc.
