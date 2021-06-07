@@ -34,14 +34,11 @@ Provides:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-Breaking changes to Index page rendering.
-Changed Index page setup routines (fluent setup).
-Added configuration items show on index page.
-Added possibility to include external content file on index page.
+Made hyperlink style less general to have normal links in included page.
     </PackageReleaseNotes>
-    <Version>2.0.0</Version>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.1</Version>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <FileVersion>2.0.1.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->

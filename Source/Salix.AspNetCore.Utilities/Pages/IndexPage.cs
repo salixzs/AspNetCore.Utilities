@@ -50,12 +50,12 @@ namespace Salix.AspNetCore.Utilities
 
                 if (!string.IsNullOrEmpty(this.IndexPageOptions.HealthPageAddress))
                 {
-                    buttons.AppendLine($"<a href=\"{this.IndexPageOptions.HealthPageAddress}\">Health/Test</a>");
+                    buttons.AppendLine($"<a class=\"button\" href=\"{this.IndexPageOptions.HealthPageAddress}\">Health/Test</a>");
                 }
 
                 if (!string.IsNullOrEmpty(this.IndexPageOptions.SwaggerPageAddress))
                 {
-                    buttons.AppendLine($"<a href=\"{this.IndexPageOptions.SwaggerPageAddress}\">Swagger/Test</a>");
+                    buttons.AppendLine($"<a class=\"button\" href=\"{this.IndexPageOptions.SwaggerPageAddress}\">Swagger/Test</a>");
                 }
 
                 indexHtml = indexHtml.Replace("{Buttons}", buttons.ToString());
@@ -92,7 +92,7 @@ namespace Salix.AspNetCore.Utilities
                 return $"<div class=\"column\"><h1>Included contents</h1><p>Contents file {includeFileName} is too big!</p></div>";
             }
 
-            string contents = System.IO.File.ReadAllText(includeFileName);
+            string contents = System.IO.File.ReadAllText(includeFileName, Encoding.UTF8);
             if (System.IO.Path.GetExtension(includeFileName).StartsWith(".HTM", StringComparison.OrdinalIgnoreCase))
             {
                 if (contents.Contains("<body>"))
