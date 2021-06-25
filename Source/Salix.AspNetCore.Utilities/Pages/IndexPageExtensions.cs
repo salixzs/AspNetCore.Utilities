@@ -56,10 +56,23 @@ namespace Salix.AspNetCore.Utilities
         }
 
         /// <summary>
+        /// Adds the link button in Index page for additional relevant links.
+        /// </summary>
+        /// <param name="idxPage">The index page instance.</param>
+        /// <param name="buttonTitle">Title of the button.</param>
+        /// <param name="linkUrl">The link URL to go to when button is clicked.</param>
+        public static IndexPage AddLinkButton(this IndexPage idxPage, string buttonTitle, string linkUrl)
+        {
+            idxPage.IndexPageOptions.AddLinkButton(buttonTitle, linkUrl);
+            return idxPage;
+        }
+
+        /// <summary>
         /// Set the relative address of the Health/Test page for API.
         /// </summary>
         /// <param name="idxPage">The index page instance.</param>
         /// <param name="healthPage">Relative URL of Health Page.</param>
+        [Obsolete("Use AddLinkButton(string title, string Url) method to add custom link buttons.", false)]
         public static IndexPage SetHealthPageUrl(this IndexPage idxPage, string healthPage)
         {
             idxPage.IndexPageOptions.SetHealthPageUrl(healthPage);
@@ -71,6 +84,7 @@ namespace Salix.AspNetCore.Utilities
         /// </summary>
         /// <param name="idxPage">The index page instance.</param>
         /// <param name="swaggerUi">Relative URL of Swagger UI page.</param>
+        [Obsolete("Use AddLinkButton(string title, string Url) method to add custom link buttons.", false)]
         public static IndexPage SetSwaggerUrl(this IndexPage idxPage, string swaggerUi)
         {
             idxPage.IndexPageOptions.SetSwaggerUrl(swaggerUi);

@@ -43,19 +43,13 @@ namespace Salix.AspNetCore.Utilities
                 ? indexHtml.Replace("{Built}", "---")
                 : indexHtml.Replace("{Built}", this.IndexPageOptions.BuiltTime.ToHumanDateString());
 
-            if (!string.IsNullOrEmpty(this.IndexPageOptions.HealthPageAddress) || !string.IsNullOrEmpty(this.IndexPageOptions.SwaggerPageAddress))
+            if (this.IndexPageOptions.LinkButtons.Any())
             {
                 var buttons = new StringBuilder("<hr/>");
                 buttons.AppendLine("<p style=\"margin-top:2em;\">");
-
-                if (!string.IsNullOrEmpty(this.IndexPageOptions.HealthPageAddress))
+                foreach (var button in this.IndexPageOptions.LinkButtons)
                 {
-                    buttons.AppendLine($"<a class=\"button\" href=\"{this.IndexPageOptions.HealthPageAddress}\">Health/Test</a>");
-                }
-
-                if (!string.IsNullOrEmpty(this.IndexPageOptions.SwaggerPageAddress))
-                {
-                    buttons.AppendLine($"<a class=\"button\" href=\"{this.IndexPageOptions.SwaggerPageAddress}\">Swagger/Test</a>");
+                    buttons.AppendLine($"<a class=\"button\" href=\"{button.Value}\">{button.Key}</a>");
                 }
 
                 indexHtml = indexHtml.Replace("{Buttons}", buttons.ToString());

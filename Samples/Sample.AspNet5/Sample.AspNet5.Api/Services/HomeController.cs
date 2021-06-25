@@ -70,8 +70,9 @@ namespace Sample.AspNet5.Api.Services
                 .SetHostingEnvironment(_hostingEnvironment.EnvironmentName)
                 .SetVersionFromAssembly(apiAssembly, 2) // Takes version from assembly - just first two numbers as specified
                 .SetBuildTimeFromAssembly(apiAssembly)  // For this to work need non-deterministic AssemblyInfo.cs version set.
-                .SetHealthPageUrl(HealthTestEndpoint)   // See operation URL set on action method below!
-                .SetSwaggerUrl("/swagger")
+                .AddLinkButton("Health/Test", HealthTestEndpoint)   // See operation URL set on action method below!
+                .AddLinkButton("Swagger", "/swagger")
+                .AddLinkButton("HangFire", "/hf")
                 .SetConfigurationValues(obfuscatedConfig)
                 .IncludeContentFile("build_data.html");
 

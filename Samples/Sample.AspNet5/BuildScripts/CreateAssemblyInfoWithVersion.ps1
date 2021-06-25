@@ -5,15 +5,15 @@
     Script takes template "AssemblyInfo.txt" in script directory and generates
     from it AssemblyInfo.cs file, placed in Project directory, which is executing this script.
     Version is in format "X.X.Days.Minutes", where
-      - X.X = from MasjorMinorVersion parameter and can be anything, like "1.0", "2.5.12"
-      - Days = calucated days between given StartDate parameter and today.
+      - X.X = from MajorMinorVersion parameter and can be anything, like "1.0", "2.5.12"
+      - Days = calculated days between given StartDate parameter and today.
       - Minutes = minutes since [todays] midnight.
     Resulting version is something like this "1.0.127.893" with ever incrementing last two values.
     You can calculate exact build time back from this, if you know StartDate.
 
     To add it as part of project build, add this to csproj file:
 
-<Target Name="GenerateVersionedAssemblyInfo" AfterTargets="GenerateAdditionalSources" >
+<Target Name="GenerateVersionedAssemblyInfo" BeforeTargets="PreBuildEvent" >
   <PropertyGroup>
   <ProjectStartDate>2021-05-09T09:00:00</ProjectStartDate>
   <BaseVersion>2.1</BaseVersion>
@@ -29,7 +29,7 @@
 .PARAMETER StartDate
     DateTime of either project start or last major version change.
 .PARAMETER MajorMinorVersion
-    String in form of "X.X" or "X.X.X" to specifu major, minor version numbers (static ones). Do not add a dot in the end!
+    String in form of "X.X" or "X.X.X" to specify major, minor version numbers (static ones). Do not add a dot in the end!
 
 .EXAMPLE 
     .\CreateAssemblyInfoWithVersion.ps1 -StartDate "2021-05-31 09:00:00" -MajorMinorVersion "2.4"

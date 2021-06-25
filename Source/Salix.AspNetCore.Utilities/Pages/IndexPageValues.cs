@@ -53,6 +53,11 @@ namespace Salix.AspNetCore.Utilities
         public string BuildMode { get; internal set; } = "Undetermined";
 
         /// <summary>
+        /// Buttons to be added to Index page, where key = Button title and Value = URL to open.
+        /// </summary>
+        public Dictionary<string, string> LinkButtons { get; internal set; } = new Dictionary<string, string>();
+
+        /// <summary>
         /// Relative address of the Health/Test page for API.
         /// </summary>
         public string HealthPageAddress { get; internal set; }
@@ -149,12 +154,26 @@ namespace Salix.AspNetCore.Utilities
         }
 
         /// <summary>
+        /// Add link button title and Url to index page link buttons collection.
+        /// </summary>
+        /// <param name="idxPageValues">The index page values.</param>
+        /// <param name="buttonTitle">The Title text to place on button.</param>
+        /// <param name="linkUrl">The link URL to open when button is clicked.</param>
+        public static IndexPageValues AddLinkButton(this IndexPageValues idxPageValues, string buttonTitle, string linkUrl)
+        {
+            idxPageValues.LinkButtons.Add(buttonTitle, linkUrl);
+            return idxPageValues;
+        }
+
+        /// <summary>
         /// Relative address of the Health/Test page for API.
         /// </summary>
         /// <param name="idxPageValues">The index page values.</param>
         /// <param name="healthPage">Relative URL of Health Page.</param>
+        [Obsolete("Use AddLinkButton(string title, string Url) method to add custom link buttons.", false)]
         public static IndexPageValues SetHealthPageUrl(this IndexPageValues idxPageValues, string healthPage)
         {
+            idxPageValues.LinkButtons.Add("Health/Test", healthPage);
             idxPageValues.HealthPageAddress = healthPage;
             return idxPageValues;
         }
@@ -165,8 +184,10 @@ namespace Salix.AspNetCore.Utilities
         /// </summary>
         /// <param name="idxPageValues">The index page values.</param>
         /// <param name="swaggerUrl">Relative URL of the Swagger UI page.</param>
+        [Obsolete("Use AddLinkButton(string title, string Url) method to add custom link buttons.", false)]
         public static IndexPageValues SetSwaggerUrl(this IndexPageValues idxPageValues, string swaggerUrl)
         {
+            idxPageValues.LinkButtons.Add("Swagger", swaggerUrl);
             idxPageValues.SwaggerPageAddress = swaggerUrl;
             return idxPageValues;
         }

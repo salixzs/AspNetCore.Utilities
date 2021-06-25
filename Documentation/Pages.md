@@ -180,21 +180,15 @@ IndexPage indexPage = new IndexPage("Sample API");
 #endif
 ```
 
-##### HealthPageUrl
 
-This parameter is tightly connected to another page provided by this package: [Health page](#health--test-page). Is should be a relative URL to controller action, which server this page. When this is specified - button appears on page with link to that page, otherwise button is not shown.
-```csharp
-IndexPage indexPage = new IndexPage("Sample API")
-    .SetHealthPageUrl("/api/healthtest")
-```
-
-##### SwaggerUrl
-
-Is similar to HealthPageUrl, but should be populated if you use Swagger with your API and it should point to URL, where Swagger UI (or Json) is available.
+##### Links (as Buttons)
+To add some additional links to other pages, there is a possibility to specify URLs for these to appear as buttons in page. First parameter is Button text/title, second is either relative or absolute URL to necessary page.
 
 ```csharp
 IndexPage indexPage = new IndexPage("Sample API")
-    .SetSwaggerUrl("/swagger");
+    .AddLinkButton("Health", "/api/healthtest") // link to other page - Health
+    .AddLinkButton("Swagger", "/swagger")
+    .AddLinkButton("HangFire", "/hf")
 ```
 
 
