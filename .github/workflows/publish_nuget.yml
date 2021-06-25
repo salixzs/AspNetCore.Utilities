@@ -25,6 +25,7 @@ jobs:
       uses: Rebel028/publish-nuget@2.6.1
       with:
           PROJECT_FILE_PATH: Source/Salix.AspNetCore.Utilities/Salix.AspNetCore.Utilities.csproj
+          PACKAGE_NAME: Salix.AspNetCore.Utilities
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org
           INCLUDE_SYMBOLS: true
