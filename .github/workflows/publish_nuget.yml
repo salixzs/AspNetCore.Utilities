@@ -21,11 +21,10 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Publish NuGet 2
-      uses: Rebel028/publish-nuget@2.6.1
+    - name: Publish NuGet package
+      uses: laget-se/publish-nuget@v2.6.7
       with:
           PROJECT_FILE_PATH: Source/Salix.AspNetCore.Utilities/Salix.AspNetCore.Utilities.csproj
-          PACKAGE_NAME: Salix.AspNetCore.Utilities
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org
           INCLUDE_SYMBOLS: true
