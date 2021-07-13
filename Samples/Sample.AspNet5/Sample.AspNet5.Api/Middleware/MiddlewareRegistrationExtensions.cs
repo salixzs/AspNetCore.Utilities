@@ -21,9 +21,11 @@ namespace Sample.AspNet5.Api.Middleware
 
         /// <summary>
         /// Adds configuration validation yellow screen of death in case there are configuration validation errors found.
+        /// UseWhen filters that behavior only for front(root) page.
         /// </summary>
         /// <param name="app">The ASP.NET application.</param>
-        public static IApplicationBuilder UseConfigurationValidationErrorPage(this IApplicationBuilder app) =>
-            app.UseMiddleware<ConfigurationValidationMiddleware>();
+        public static void UseConfigurationValidationErrorPage(this IApplicationBuilder app) =>
+            app.UseWhen(context => context.Request.Path.Value.Equals("/", System.StringComparison.OrdinalIgnoreCase),
+                appBuilder => appBuilder.UseMiddleware<ConfigurationValidationMiddleware>());
     }
 }

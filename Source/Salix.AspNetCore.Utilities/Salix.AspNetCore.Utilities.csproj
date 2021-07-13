@@ -34,11 +34,11 @@ Provides:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-Generalized link button adding for index page (more than 2).
+Fixed Configuration validation middleware page (DI on invoke).
     </PackageReleaseNotes>
-    <Version>2.1.0</Version>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
+    <Version>2.1.1</Version>
+    <AssemblyVersion>2.1.1.0</AssemblyVersion>
+    <FileVersion>2.1.1.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->

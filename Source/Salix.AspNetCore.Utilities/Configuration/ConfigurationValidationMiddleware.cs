@@ -13,15 +13,9 @@ namespace Salix.AspNetCore.Utilities
     public class ConfigurationValidationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IEnumerable<IValidatableConfiguration> _validatableConfigurations;
-        private readonly ILogger<ConfigurationValidationMiddleware> _logger;
 
-        public ConfigurationValidationMiddleware(RequestDelegate next, IEnumerable<IValidatableConfiguration> validatableConfigurations, ILogger<ConfigurationValidationMiddleware> logger)
-        {
+        public ConfigurationValidationMiddleware(RequestDelegate next) =>
             _next = next ?? throw new ArgumentNullException(nameof(next));
-            _validatableConfigurations = validatableConfigurations;
-            _logger = logger;
-        }
 
         /// <summary>
         /// Overridden method which gets invoked by HTTP middleware stack.
@@ -29,28 +23,28 @@ namespace Salix.AspNetCore.Utilities
         /// <param name="httpContext">The HTTP context.</param>
         /// <exception cref="ArgumentNullException">HTTP Context does not exist (never happens).</exception>
 #pragma warning disable RCS1046 // Suffix Async is not expected by ASP.NET Core implementation
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext, IEnumerable<IValidatableConfiguration> validatableConfigurations, ILogger<ConfigurationValidationMiddleware> logger)
 #pragma warning restore RCS1046
         {
-            _logger.LogDebug($"Validating configuration of {_validatableConfigurations.Count()} objects.");
+            logger.LogDebug($"Validating configuration of {validatableConfigurations.Count()} objects.");
             var failures = new List<ConfigurationValidationItem>();
-            foreach (IValidatableConfiguration validatableObject in _validatableConfigurations)
+            foreach (IValidatableConfiguration validatableObject in validatableConfigurations)
             {
                 failures.AddRange(validatableObject.Validate());
             }
 
             if (failures.Count == 0)
             {
-                _logger.LogDebug("All configurations are valid.");
+                logger.LogDebug("All configurations are valid.");
                 await _next(httpContext);
                 return;
             }
 
             // Put configuration validation failures in log.
-            _logger.LogError($"Found {failures.Count} problems in configuration.");
+            logger.LogError($"Found {failures.Count} problems in configuration.");
             foreach (ConfigurationValidationItem failure in failures)
             {
-                _logger.LogError($"Configuration section {failure.ConfigurationSection}, item {failure.ConfigurationItem}: {failure.ValidationMessage}");
+                logger.LogError($"Configuration section {failure.ConfigurationSection}, item {failure.ConfigurationItem}: {failure.ValidationMessage}");
             }
 
             // Now getting page template and pushing it to response

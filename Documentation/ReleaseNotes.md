@@ -1,5 +1,10 @@
 # Release notes
 
+## 2.1.1
+**Fixes**
+
+* Configuration validation middleware page - Dependecy injection moved to `invoke` method (instead of contructor) as it appears correct way of getting them properly resolved.
+
 ## 2.1.0
 **Improved**
 

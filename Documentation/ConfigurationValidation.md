@@ -44,6 +44,11 @@ This middleware component will kick in for every request, validates all configur
 
 In case you want to perform this validation and show error page only on certain request paths, there is a filtering option available for setup as described in [this DevTrends article](https://www.devtrends.co.uk/blog/conditional-middleware-based-on-request-in-asp.net-core).
 
+```csharp
+// Show problems only when root URL is requested.
+app.UseWhen(context => context.Request.Path.Value.Equals("/"), appBuilder => appBuilder.UseMiddleware<ConfigurationValidationMiddleware>());
+```
+
 ## Auto-validation by [HealthCheck](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-5.0)
 
 Package provides HealthCheck provider to plug-in into your health checking routines for application.
