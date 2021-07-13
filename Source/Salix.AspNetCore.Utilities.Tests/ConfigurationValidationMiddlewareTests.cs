@@ -20,13 +20,13 @@ namespace Salix.AspNetCore.Utilities.Tests
         {
             var logger = new Mock<ILogger<ConfigurationValidationMiddleware>>();
             var configs = new List<IValidatableConfiguration>();
-            var middleware = new ConfigurationValidationMiddleware(next: (innerHttpContext) => Task.CompletedTask, configs, logger.Object);
+            var middleware = new ConfigurationValidationMiddleware(next: (innerHttpContext) => Task.CompletedTask);
 
             var context = new DefaultHttpContext();
             context.Response.Body = new MemoryStream();
 
             // Act
-            await middleware.Invoke(context);
+            await middleware.Invoke(context, configs, logger.Object);
 
             context.Response.Body.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(context.Response.Body);
@@ -47,13 +47,13 @@ namespace Salix.AspNetCore.Utilities.Tests
         {
             var logger = new Mock<ILogger<ConfigurationValidationMiddleware>>();
             var configs = new List<IValidatableConfiguration> { new TestValidConfig() };
-            var middleware = new ConfigurationValidationMiddleware(next: (innerHttpContext) => Task.CompletedTask, configs, logger.Object);
+            var middleware = new ConfigurationValidationMiddleware(next: (innerHttpContext) => Task.CompletedTask);
 
             var context = new DefaultHttpContext();
             context.Response.Body = new MemoryStream();
 
             // Act
-            await middleware.Invoke(context);
+            await middleware.Invoke(context, configs, logger.Object);
 
             context.Response.Body.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(context.Response.Body);
@@ -74,13 +74,13 @@ namespace Salix.AspNetCore.Utilities.Tests
         {
             var logger = new Mock<ILogger<ConfigurationValidationMiddleware>>();
             var configs = new List<IValidatableConfiguration> { new TestInvalidConfig() };
-            var middleware = new ConfigurationValidationMiddleware(next: (innerHttpContext) => Task.CompletedTask, configs, logger.Object);
+            var middleware = new ConfigurationValidationMiddleware(next: (innerHttpContext) => Task.CompletedTask);
 
             var context = new DefaultHttpContext();
             context.Response.Body = new MemoryStream();
 
             // Act
-            await middleware.Invoke(context);
+            await middleware.Invoke(context, configs, logger.Object);
 
             context.Response.Body.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(context.Response.Body);
