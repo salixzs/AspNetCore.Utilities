@@ -37,13 +37,8 @@ namespace Salix.AspNetCore.Utilities
                         }
                     }
 
-                    if (whitelistFilter != null && !whitelistFilter.Any(k => totalKey.StartsWith(k, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        continue;
-                    }
-
                     (string value, IConfigurationProvider provider) = GetValueAndProvider(_configuration, child.Path);
-                    if (provider != null)
+                    if (provider != null && (whitelistFilter == null || (whitelistFilter != null && whitelistFilter.Any(k => totalKey.StartsWith(k, StringComparison.OrdinalIgnoreCase)))))
                     {
                         if (provider.GetType().BaseType?.Name == "FileConfigurationProvider")
                         {

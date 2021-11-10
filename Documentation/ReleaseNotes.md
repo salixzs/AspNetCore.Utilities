@@ -1,5 +1,17 @@
 # Release notes
 
+## 2.2.0 (@ time for .Net 6)
+
+Package stays in .Net Standard 2.0, so no big difference, just upgraded Json package reference.
+
+**Fixes**
+
+* Homepage config values allows to filter (whitelist) on key/subkey values. Created bunch of missing unit-tests to safeguard this functionality.
+
+**Overall**
+
+* Updated dependency packages (MS Abstractions - 3.1.21, System.Text.Json - 6.0.0)
+
 ## 2.1.1
 **Fixes**
 

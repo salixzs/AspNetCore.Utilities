@@ -57,7 +57,7 @@ namespace Sample.AspNet5.Api.Services
             Dictionary<string, string> configurationItems =
                 _configLoader.GetConfigurationValues(new HashSet<string>
                 {
-                    "AllowedHosts", "contentRoot", "Logging", "LogicConfiguration", "DatabaseConnection"
+                    "AllowedHosts", "contentRoot", "Logging/LogLevel", "LogicConfiguration", "DatabaseConnection"
                 });
 
             // #if !DEBUG <--- Do that only when running not in DEBUG mode

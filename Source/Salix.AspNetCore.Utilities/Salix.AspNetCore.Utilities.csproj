@@ -23,22 +23,19 @@
     <PackageIcon>utilities.png</PackageIcon>
     <Description>
 Core functionalities which should exist in each (REST) API implementation with ASP.NET Core 3+ framework.
-Provides:
-  1) Global Error Handler (JSON object details on unhandled exceptions),
-  2) HealthCheck customizations (formatter),
-  3) Simple root page and healthcheck results page (without full MVC stack)
-  4) ConfigurationValidation handlers and extensions (startup filter, death page, healthcheck), 
+Provides Global Error Handler (JSON object details on unhandled exceptions),HealthCheck customizations (formatter), Simple root page and healthcheck results page and ConfigurationValidation handlers and extensions. 
     </Description>
+    <PackageReadmeFile>nuget_readme.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/salixzs/AspNetCore.Utilities</PackageProjectUrl>
     <RepositoryUrl>https://github.com/salixzs/AspNetCore.Utilities</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-Fixed Configuration validation middleware page (DI on invoke).
+Allows to show subconfiguration subkeysfilter by. Added tests for this feature. Upgraded dependency packages.
     </PackageReleaseNotes>
-    <Version>2.1.1</Version>
-    <AssemblyVersion>2.1.1.0</AssemblyVersion>
-    <FileVersion>2.1.1.0</FileVersion>
+    <Version>2.2.0</Version>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->
@@ -48,17 +45,17 @@ Fixed Configuration validation middleware page (DI on invoke).
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.15" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.15" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.15" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.15" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.21" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.21" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.21" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.21" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.21" />
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
 
   <!-- === Solution project dependencies ===-->
@@ -78,6 +75,7 @@ Fixed Configuration validation middleware page (DI on invoke).
 
   <ItemGroup>
     <None Include="../../utilities.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="../../nuget_readme.md" Pack="true" Visible="false" PackagePath="\" />
   </ItemGroup>
   
   <!-- Making internal class/methods visible to test solution-->

@@ -182,8 +182,17 @@ namespace Salix.AspNetCore.Utilities
             int replaceablePartLength = (initialValue.Length / 2) + 1;
             int lastThirdLength = ((initialValue.Length - replaceablePartLength) / 2) + ((initialValue.Length - replaceablePartLength) % 2);
             int firstThirdLength = initialValue.Length - replaceablePartLength - lastThirdLength;
+            if (firstThirdLength > 3)
+            {
+                firstThirdLength = 3;
+            }
 
-            return initialValue.Substring(0, firstThirdLength) + new string('*', replaceablePartLength) + initialValue.Substring(firstThirdLength + replaceablePartLength, lastThirdLength);
+            if (lastThirdLength > 3)
+            {
+                lastThirdLength = 3;
+            }
+
+            return initialValue.Substring(0, firstThirdLength) + new string('*', 5) + initialValue.Substring(firstThirdLength + replaceablePartLength, lastThirdLength);
         }
     }
 }
