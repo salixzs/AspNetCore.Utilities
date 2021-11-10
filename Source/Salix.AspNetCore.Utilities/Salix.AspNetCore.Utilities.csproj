@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- === General properties ===-->
   <PropertyGroup>
@@ -75,7 +75,7 @@ Allows to show subconfiguration subkeysfilter by. Added tests for this feature. 
 
   <ItemGroup>
     <None Include="../../utilities.png" Pack="true" Visible="false" PackagePath="" />
-    <None Include="../../nuget_readme.md" Pack="true" Visible="false" PackagePath="\" />
+    <None Include="../../nuget_readme.md" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   
   <!-- Making internal class/methods visible to test solution-->

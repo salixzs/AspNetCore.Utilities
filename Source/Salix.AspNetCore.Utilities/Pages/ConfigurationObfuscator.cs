@@ -181,17 +181,18 @@ namespace Salix.AspNetCore.Utilities
             // Text middle part is replaced with * ("SomeServer" = "So******er")
             int replaceablePartLength = (initialValue.Length / 2) + 1;
             int lastThirdLength = ((initialValue.Length - replaceablePartLength) / 2) + ((initialValue.Length - replaceablePartLength) % 2);
+            if (lastThirdLength > 3)
+            {
+                lastThirdLength = 3;
+            }
+
             int firstThirdLength = initialValue.Length - replaceablePartLength - lastThirdLength;
             if (firstThirdLength > 3)
             {
                 firstThirdLength = 3;
             }
 
-            if (lastThirdLength > 3)
-            {
-                lastThirdLength = 3;
-            }
-
+            replaceablePartLength = initialValue.Length - lastThirdLength - firstThirdLength;
             return initialValue.Substring(0, firstThirdLength) + new string('*', 5) + initialValue.Substring(firstThirdLength + replaceablePartLength, lastThirdLength);
         }
     }
