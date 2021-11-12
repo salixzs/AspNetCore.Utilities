@@ -21,7 +21,7 @@ namespace Salix.AspNetCore.Utilities.Tests
         [InlineData("Address = myServerAddress\\InstanceName; Network Library = DBMSSOCN; Initial Catalog = myDataBase; Trusted_Connection = True; MultipleActiveResultSets = true;", "Server=myS*****ess\\In*****ame;Network Library=DBMSSOCN;Database=my*****se;Trusted_Connection=True;MultipleActiveResultSets=true;")]
         public void ObfuscateSqlString_Partial_PartiallyHidden(string original, string obfuscated)
         {
-            var result = original.ObfuscateSqlConnectionString(true);
+            string result = original.ObfuscateSqlConnectionString(true);
             result.Should().Be(obfuscated);
         }
 
@@ -32,7 +32,7 @@ namespace Salix.AspNetCore.Utilities.Tests
         [InlineData("Address=190.190.200.100;Network Library=DBMSSOCN;Initial Catalog=myDataBase;Trusted_Connection=True;MultipleActiveResultSets=true;", "Server=[hidden];Network Library=DBMSSOCN;Database=[hidden];Trusted_Connection=True;MultipleActiveResultSets=true;")]
         public void ObfuscateSqlString_Full_AllHidden(string original, string obfuscated)
         {
-            var result = original.ObfuscateSqlConnectionString();
+            string result = original.ObfuscateSqlConnectionString();
             result.Should().Be(obfuscated);
         }
 
@@ -44,7 +44,7 @@ namespace Salix.AspNetCore.Utilities.Tests
         [InlineData("me@my.desk", "[hidden]@[hidden].desk")]
         public void ObfuscateString_Email_Replaced(string original, string obfuscated)
         {
-            var result = original.HideValuePartially();
+            string result = original.HideValuePartially();
             result.Should().Be(obfuscated);
         }
     }

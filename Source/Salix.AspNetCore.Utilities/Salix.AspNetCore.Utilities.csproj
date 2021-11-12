@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- === General properties ===-->
   <PropertyGroup>
@@ -7,6 +7,9 @@
     <RootNamespace>Salix.AspNetCore.Utilities</RootNamespace>
     <LangVersion>latest</LangVersion>
     <NeutralLanguage>en</NeutralLanguage>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <NoWarn>1701;1702;IDE0008;IDE0130;IDE0160;CA1848;CA2254</NoWarn>
   </PropertyGroup>
 
   <!-- === NuGet package description properties ===-->
