@@ -34,11 +34,11 @@ Provides Global Error Handler (JSON object details on unhandled exceptions),Heal
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-Allows to show subconfiguration subkeysfilter by. Added tests for this feature. Upgraded dependency packages.
+Added defaulted bool parameter to home page buttons and config values to show/hide (default = show).
     </PackageReleaseNotes>
-    <Version>2.2.0</Version>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <Version>2.3.0</Version>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <FileVersion>2.3.0.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->

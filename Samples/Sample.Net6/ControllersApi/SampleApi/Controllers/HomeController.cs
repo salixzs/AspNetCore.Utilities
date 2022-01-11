@@ -1,26 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Salix.AspNetCore.Utilities;
-using Sample.AspNet5.Logic;
 
-namespace Sample.AspNet5.Api.Services
+namespace SampleApi.Controllers
 {
-    /// <summary>
-    /// Frontend page show functionality to avoid having 404 page does not exist.
-    /// Also giving nicer output of some description.
-    /// </summary>
-    /// <remarks>
-    /// Should put [ApiExplorerSettings(IgnoreApi = true)] attribute to filter this out from Swagger, is used.
-    /// </remarks>
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class HomeController : ControllerBase
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
@@ -29,16 +17,6 @@ namespace Sample.AspNet5.Api.Services
         private readonly ILogger<HomeController> _logger;
         private readonly IConfigurationValuesLoader _configLoader;
 
-        private const string HealthTestEndpoint = "/api/healthtest";
-
-        /// <summary>
-        /// Home controller for two pages, available from Utilities.
-        /// </summary>
-        /// <param name="hostingEnvironment">Hosting environment.</param>
-        /// <param name="logic">Demonstration business logic (throwing errors).</param>
-        /// <param name="healthChecks">ASP.Net built in health checking services. DO NOT INJECT this, if you do not have Health checks configured in API.</param>
-        /// <param name="logger">Logging object.</param>
-        /// <param name="configLoader">A Helper class to load all existing application/api configured key-value pairs.</param>
         public HomeController(IWebHostEnvironment hostingEnvironment, ISampleLogic logic, HealthCheckService healthChecks, ILogger<HomeController> logger, IConfigurationValuesLoader configLoader)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -55,26 +33,25 @@ namespace Sample.AspNet5.Api.Services
         public ContentResult Index()
         {
             // Load filtered configuration items from entire configuration based on given whitelist filter
-            Dictionary<string, string> configurationItems =
+            var configurationItems =
                 _configLoader.GetConfigurationValues(new HashSet<string>
                 {
                     "AllowedHosts", "contentRoot", "Logging/LogLevel", "LogicConfiguration", "DatabaseConnection"
                 });
 
             // #if !DEBUG <--- Do that only when running not in DEBUG mode
-            Dictionary<string, string> obfuscatedConfig = ObfuscateConfigurationValues(configurationItems);
+            var obfuscatedConfig = ObfuscateConfigurationValues(configurationItems);
             // #endif
 
-            var apiAssembly = Assembly.GetAssembly(typeof(Startup));
-            IndexPage indexPage = new IndexPage("Sample API")
+            var apiAssembly = Assembly.GetAssembly(typeof(HomeController));
+            var indexPage = new IndexPage("Sample API")
                 .SetDescription("Demonstrating capabilities of Salix.AspNetCore.Utilities NuGet package.")
                 .SetHostingEnvironment(_hostingEnvironment.EnvironmentName)
                 .SetVersionFromAssembly(apiAssembly, 2) // Takes version from assembly - just first two numbers as specified
                 .SetBuildTimeFromAssembly(apiAssembly)  // For this to work need non-deterministic AssemblyInfo.cs version set.
-                .AddLinkButton("Health/Test", HealthTestEndpoint)   // See operation URL set on action method below!
-                .AddLinkButton("Swagger", "/swagger", !_hostingEnvironment.IsDevelopment()) // Does not show button for non-Dev environments
-                .AddLinkButton("HangFire", "/hf")
-                .SetConfigurationValues(obfuscatedConfig, !_hostingEnvironment.IsDevelopment()) // Does not show configuration values for non-DEV environments
+                .AddLinkButton("Health/Test", "/health/status")   // See operation URL set on action method below!
+                .AddLinkButton("Swagger", "/swagger")
+                .SetConfigurationValues(obfuscatedConfig)
                 .IncludeContentFile("build_data.html");
 
             // "Hacking" to understand what mode API is getting compiled.
@@ -99,7 +76,7 @@ namespace Sample.AspNet5.Api.Services
         private static Dictionary<string, string> ObfuscateConfigurationValues(Dictionary<string, string> configurationItems)
         {
             var obfuscated = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> original in configurationItems)
+            foreach (var original in configurationItems)
             {
                 if (original.Key.StartsWith("LogicConfiguration/SomeIp", StringComparison.OrdinalIgnoreCase)
                     || original.Key.StartsWith("LogicConfiguration/SomeEmail", StringComparison.OrdinalIgnoreCase)
@@ -124,10 +101,10 @@ namespace Sample.AspNet5.Api.Services
         /// Displays separate Health status page, extracted from standard Health Check report.
         /// Added few testing links to showcase possibility to add custom links for API testing.
         /// </summary>
-        [HttpGet(HealthTestEndpoint)]
+        [HttpGet("/health/status")]
         public async Task<ContentResult> HealthTest()
         {
-            HealthReport healthResult = await _healthChecks.CheckHealthAsync().ConfigureAwait(false);
+            var healthResult = await _healthChecks.CheckHealthAsync().ConfigureAwait(false);
             return new ContentResult
             {
                 ContentType = "text/html",

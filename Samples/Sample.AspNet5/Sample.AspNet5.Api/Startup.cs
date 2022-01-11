@@ -44,7 +44,7 @@ namespace Sample.AspNet5.Api
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.IgnoreNullValues = false; // All fields should present, even null valued
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never; // All fields should present, even null valued
                     options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase; // e.g. camelCase. To use PascalCase, set it to null
                     options.JsonSerializerOptions.WriteIndented = false; // compact json
                     options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;

@@ -58,9 +58,13 @@ public static class IndexPageExtensions
     /// <param name="idxPage">The index page instance.</param>
     /// <param name="buttonTitle">Title of the button.</param>
     /// <param name="linkUrl">The link URL to go to when button is clicked.</param>
-    public static IndexPage AddLinkButton(this IndexPage idxPage, string buttonTitle, string linkUrl)
+    public static IndexPage AddLinkButton(this IndexPage idxPage, string buttonTitle, string linkUrl, bool shouldHide = false)
     {
-        idxPage.IndexPageOptions.AddLinkButton(buttonTitle, linkUrl);
+        if (!shouldHide)
+        {
+            idxPage.IndexPageOptions.AddLinkButton(buttonTitle, linkUrl);
+        }
+
         return idxPage;
     }
 
@@ -186,9 +190,13 @@ public static class IndexPageExtensions
         return idxPage;
     }
 
-    public static IndexPage SetConfigurationValues(this IndexPage idxPage, Dictionary<string, string> configurations)
+    public static IndexPage SetConfigurationValues(this IndexPage idxPage, Dictionary<string, string> configurations, bool shouldHide = false)
     {
-        idxPage.IndexPageOptions.SetConfigurationValues(configurations);
+        if (!shouldHide)
+        {
+            idxPage.IndexPageOptions.SetConfigurationValues(configurations);
+        }
+
         return idxPage;
     }
 
