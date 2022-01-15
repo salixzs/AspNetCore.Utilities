@@ -10,6 +10,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1701;1702;IDE0008;IDE0130;IDE0160;CA1848;CA2254</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!-- === NuGet package description properties ===-->
