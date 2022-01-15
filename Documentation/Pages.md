@@ -149,6 +149,35 @@ IndexPage indexPage = new IndexPage("Sample API")
 ```
 > Samples project `BuildScripts` folder contains script for custom Version numbering (also based on current date-time)
 
+##### Version autoincrement/calculation in CSPROJ
+
+In oppose to having total control of AssemblyInfo.cs  (like written just above), you can add its values directly in CSPROJ file of the solution project with some markup and even simple calculations.
+Let say, we want to manually control major.minor version, but last two numbers in version to be calculated based on date and thus - auto-increment it. Here is an example to have third number in version to be a count of days since project/version was started and last (4th) number to be minutes since midnight within this day.
+
+MAJOR.MINOR.dd.mm (like 1.3.98.126 = version 1.3, 98 days in project, 126 minutes since midnight)
+
+(This would allow to calculate build time back from version number.)
+
+```xml
+<PropertyGroup>
+  <Company>My Company</Company>
+  <Product>Some cool API</Product>
+  <Description>Backend business logic for frontend application as RESTful API.</Description>
+  <!-- Calculating version number -->
+  <VersionMajor Condition="'$(VersionMajor)' == ''">1</VersionMajor>
+  <VersionMinor Condition="'$(VersionMinor)' == ''">0</VersionMinor>
+  <!-- Here note hardcoded project/version start date in incline code -->
+  <VersionPatch Condition="'$(VersionPatch)' == ''">$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2022,02,21,9,0,0))).TotalDays.ToString("0"))</VersionPatch>
+  <VersionRevision Condition="'$(VersionRevision)' == ''">$([System.DateTime]::UtcNow.TimeOfDay.TotalMinutes.ToString("0"))</VersionRevision>
+  <CalculatedVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)</CalculatedVersion>
+  <AssemblyVersion Condition=" '$(CalculatedVersion)' == '' ">1.0.0.0</AssemblyVersion>
+  <AssemblyVersion Condition=" '$(CalculatedVersion)' != '' ">$(CalculatedVersion)</AssemblyVersion>
+  <Version Condition=" '$(CalculatedVersion)' == '' ">1.0.0.0</Version>
+  <Version Condition=" '$(CalculatedVersion)' != '' ">$(CalculatedVersion)</Version>
+</PropertyGroup>
+```
+
+
 ##### BuildTime
 It is a DateTime to be set, indicating when API was built. You can change it manually before going to production:
 ```csharp
@@ -187,7 +216,7 @@ To add some additional links to other pages, there is a possibility to specify U
 ```csharp
 IndexPage indexPage = new IndexPage("Sample API")
     .AddLinkButton("Health", "/api/healthtest") // link to other page - Health
-    .AddLinkButton("Swagger", "/swagger")
+    .AddLinkButton("Swagger", "/swagger", !hostingEnvironment.IsDevelopment()) // Will hide in non-DEV environments.
     .AddLinkButton("HangFire", "/hf")
 ```
 
@@ -218,8 +247,9 @@ Index page has extension method to set a list of string key+value pairs, which a
 
 So basically it is your own doing of composing this list and supplying for the page:
 ```csharp
+// Second parameter is optional, when TRUE - hides configuration value display.
 IndexPage indexPage = new IndexPage("Sample API")
-    .SetConfigurationValues(configurationItems);
+    .SetConfigurationValues(configurationItems, !hostEnvironment.IsDevelopment());
 ```
 
 There is one helper class, which can extract all existing configuration key-value pairs from `IConfiguration` instance. To use it you first need to register it in dependency injection container:

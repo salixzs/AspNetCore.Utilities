@@ -1,5 +1,9 @@
 # Release notes
 
+## 2.3.0 (@ time for .Net 6)
+
+Added optional parameter to hide buttons and configuration display in front page. (use hostEnvironment to control it).
+
 ## 2.2.0 (@ time for .Net 6)
 
 Package stays in .Net Standard 2.0, so no big difference, just upgraded Json package reference.
