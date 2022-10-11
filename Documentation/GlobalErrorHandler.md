@@ -65,7 +65,7 @@ protected override ApiError HandleSpecialException(ApiError apiError, Exception 
     // When using FluentValidation, could use also handler for its ValidationException in stead of this custom one
     if (exception is SampleDataValidationException validationException)
     {
-        apiError.Status = 400;
+        apiError.Status = 400; // or 422
         apiError.ErrorType = ApiErrorType.DataValidationError;
         apiError.ValidationErrors
             .AddRange(
@@ -97,6 +97,12 @@ protected override ApiError HandleSpecialException(ApiError apiError, Exception 
     {
         apiError.Status = 501;
         apiError.Title = "Functionality is not yet implemented.";
+    }
+    
+    if (exception is OperationCanceledException operationCanceledException)
+    {
+        // This returns empty (200) response and does not log error.
+        apiError.ErrorBehavior = ApiErrorBehavior.Ignore;
     }
 
     return apiError;
@@ -146,4 +152,28 @@ In case of data validation exceptions, when they are handled fully (as shown in 
 }
 ```
 
-That's basically it. Happy error handling!
+## Behavior control
+By default Json error handler will write exception to configured `ILogger` instance (you control where and how it writes - AppInsights, File, Debug, Console etc.)\
+and also creates Json error response and returns it to caller with specified HttpStatus code (400+, 500+).
+
+If you use custom exception handler method, you can intercept specific exceptions and make error handler do not write an error statement to `ILogger` and/or return Json error object at all (returns 200 status code with empty response).
+
+To control it, in specific exception handling method, intercept your special exception and set `ApiError` object property `ErrorBehavior` to desired behavior.
+
+```csharp
+if (exception is OperationCanceledException operationCanceledException)
+{
+    // This returns empty (200) response and does not log error.
+    apiError.ErrorBehavior = ApiErrorBehavior.Ignore;
+}
+
+if (exception is TaskCanceledException taskCanceledException)
+{
+    // This does not log error, but still returns Json error.
+    apiError.ErrorBehavior = ApiErrorBehavior.RespondWithError;
+}
+```
+
+It could come handy to ignore user canceled operations when using async code with CancellationToken.
+
+#### That's basically it. Happy error handling!
