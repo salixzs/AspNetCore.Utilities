@@ -16,5 +16,7 @@ namespace BusinessLogic
         /// Dummy method in business domain logic, which ends up throwing data validation exception.
         /// </summary>
         Task ValidationError();
+
+        Task OperationCancelled();
     }
 }

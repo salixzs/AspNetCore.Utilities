@@ -171,6 +171,8 @@ if (exception is TaskCanceledException taskCanceledException)
 {
     // This does not log error, but still returns Json error.
     apiError.ErrorBehavior = ApiErrorBehavior.RespondWithError;
+    apiError.Status = (int)HttpStatusCode.UnprocessableEntity; // or other by your design
+    apiError.ErrorType = ApiErrorType.CancelledOperation;
 }
 ```
 
