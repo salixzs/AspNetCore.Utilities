@@ -51,5 +51,14 @@ namespace Sample.AspNet5.Logic
 
             throw new SampleDataValidationException("There are validation errors.", validationErrors);
         }
+
+        public async Task OperationCancelled()
+        {
+            // mimic some work in logic.
+            await Task.Delay(100).ConfigureAwait(false);
+
+            // Assume it was thrown by dependency via CancellationToken
+            throw new OperationCanceledException("User cancelled.");
+        }
     }
 }

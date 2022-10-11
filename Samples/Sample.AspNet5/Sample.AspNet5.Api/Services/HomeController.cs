@@ -140,6 +140,7 @@ namespace Sample.AspNet5.Api.Services
                         new HealthTestPageLink { TestEndpoint = "/api/sample/exception", Name = "Exception", Description = "Throws dummy exception/error to check Json Error functionality." },
                         new HealthTestPageLink { TestEndpoint = "/api/sample/validation", Name = "Validation Error", Description = "Throws dummy data validation exception to check Json Error functionality for data validation." },
                         new HealthTestPageLink { TestEndpoint = "/api/sample/db", Name = "DB Exception", Description = "Throws dummy database exception to check Json Error custom exception handling." },
+                        new HealthTestPageLink { TestEndpoint = "/api/sample/canceled", Name = "Operation canceled Exception", Description = "Mimics OperationCanceledException thrown by some dependencies in async operations via CancellationToken. Swallows error!" },
                         new HealthTestPageLink { TestEndpoint = "/api/sample/notyet", Name = "Not yet!", Description = "Showcase Json handler work on NotImplementedException." },
                         new HealthTestPageLink { TestEndpoint = "/api/sample/anytest", Name = "DateTime", Description = "Showcase some custom API testing endpont returning some data." },
                     }),
@@ -167,6 +168,13 @@ namespace Sample.AspNet5.Api.Services
         {
             _logger.LogInformation("Within API controller, about to call \"storage/database\".");
             await _logic.DatabaseProblemLogic();
+        }
+
+        [HttpGet("/api/sample/canceled")]
+        public async Task ThrowCanceledException()
+        {
+            _logger.LogInformation("Within API controller, about to call logic with CancellationToken and cancel it during workload.");
+            await _logic.OperationCancelled();
         }
 
         [HttpGet("/api/sample/notyet")]

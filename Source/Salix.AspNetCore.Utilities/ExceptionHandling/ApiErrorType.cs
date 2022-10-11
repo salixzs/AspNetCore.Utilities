@@ -54,4 +54,11 @@ public enum ApiErrorType
     /// Mainly for update operations when already modified data is found.
     /// </summary>
     StorageConcurrencyError = 21,
+
+    /// <summary>
+    /// Exception [types] returned by some components,<br/>
+    /// usually in async approaches vith CancellationToken usage<br/>
+    /// where operation can be cancelled.
+    /// </summary>
+    CancelledOperation = 30,
 }

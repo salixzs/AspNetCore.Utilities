@@ -46,9 +46,10 @@ namespace Salix.AspNetCore.Utilities.Tests
             context.Response.Body.Seek(0, SeekOrigin.Begin);
             var reader = new StreamReader(context.Response.Body);
             string responseString = reader.ReadToEnd();
-            ApiError responseError = JsonSerializer.Deserialize<ApiError>(responseString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() } });
+            var responseError = JsonSerializer.Deserialize<ApiError>(responseString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() } });
 
             // Assert
+            responseString.Should().NotContain("ErrorBehavior");
             context.Response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
             responseError.Should().NotBeNull();
             responseError.ErrorType.Should().Be(ApiErrorType.ServerError);
@@ -232,6 +233,100 @@ namespace Salix.AspNetCore.Utilities.Tests
                 It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
                 Times.Once);
         }
+
+        [Fact]
+        public async Task CanceledException_IgnoredFully()
+        {
+            // Arrange
+            OperationCanceledException exc = null;
+            try
+            {
+                // To get stack trace
+                var prepared = new OperationCanceledException("User canceled operation.");
+                throw prepared;
+            }
+            catch (OperationCanceledException e)
+            {
+                exc = e;
+            }
+
+            var logger = new Mock<ILogger<ApiJsonExceptionMiddleware>>();
+            var middleware = new TestExceptionMiddleware(next: (innerHttpContext) => throw exc, logger.Object, true);
+
+            var context = new DefaultHttpContext();
+            context.Response.Body = new MemoryStream();
+
+            // Act
+            await middleware.Invoke(context);
+
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
+            var reader = new StreamReader(context.Response.Body);
+            string responseString = reader.ReadToEnd();
+
+            // Assert
+            responseString.Should().BeEmpty();
+            context.Response.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
+            logger.Verify(x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => true),
+                It.IsAny<Exception>(),
+                It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task CanceledTask_NoLog()
+        {
+            // Arrange
+            TaskCanceledException exc = null;
+            try
+            {
+                // To get stack trace
+                var prepared = new TaskCanceledException("Task was canceled");
+                throw prepared;
+            }
+            catch (TaskCanceledException e)
+            {
+                exc = e;
+            }
+
+            var logger = new Mock<ILogger<ApiJsonExceptionMiddleware>>();
+            var middleware = new TestExceptionMiddleware(next: (innerHttpContext) => throw exc, logger.Object, true);
+
+            var context = new DefaultHttpContext();
+            context.Response.Body = new MemoryStream();
+
+            // Act
+            await middleware.Invoke(context);
+
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
+            var reader = new StreamReader(context.Response.Body);
+            string responseString = reader.ReadToEnd();
+            var responseError = JsonSerializer.Deserialize<ApiError>(responseString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() } });
+
+            // Assert
+            responseString.Should().NotContain("ErrorBehavior");
+            context.Response.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+            responseError.Should().NotBeNull();
+            responseError.ErrorType.Should().Be(ApiErrorType.CancelledOperation);
+            responseError.ExceptionType.Should().Be("TaskCanceledException");
+            responseError.InnerException.Should().BeNullOrEmpty();
+            responseError.InnerInnerException.Should().BeNullOrEmpty();
+            responseError.Status.Should().Be(422);
+            responseError.Title.Should().Be("Task was canceled");
+            responseError.StackTrace.Should().NotBeEmpty();
+            responseError.ValidationErrors.Should().BeEmpty();
+
+            logger.Verify(x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => true),
+                It.IsAny<Exception>(),
+                It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                Times.Never);
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -257,6 +352,19 @@ namespace Salix.AspNetCore.Utilities.Tests
                                 PropertyName = failure.PropertyName,
                                 AttemptedValue = failure.AppliedValue
                             }));
+            }
+
+            if (exception is OperationCanceledException cancelledOperationException)
+            {
+                apiError.ErrorBehavior = ApiErrorBehavior.Ignore;
+            }
+
+            if (exception is TaskCanceledException cancelledTaskException)
+            {
+                // Only respons with error, but do not log it.
+                apiError.ErrorBehavior = ApiErrorBehavior.RespondWithError;
+                apiError.Status = (int)HttpStatusCode.UnprocessableEntity; // or other by your design
+                apiError.ErrorType = ApiErrorType.CancelledOperation;
             }
 
             return apiError;

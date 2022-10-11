@@ -35,31 +35,33 @@ Provides Global Error Handler (JSON object details on unhandled exceptions),Heal
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <PackageReleaseNotes>
-Added defaulted bool parameter to home page buttons and config values to show/hide (default = show).
+Breaking: Error handler - DataValidationError takes set Error response (defaulting to 400).
+New: Added possibility to selectively disable either/both logging of exception and/or returning Json error object.
+Updated some dependencies (NuGets).
     </PackageReleaseNotes>
-    <Version>2.3.0</Version>
-    <AssemblyVersion>2.3.0.0</AssemblyVersion>
-    <FileVersion>2.3.0.0</FileVersion>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
   </PropertyGroup>
 
   <!-- === Dependencies on other NuGet packages (minimum version) ===-->
   <ItemGroup>
-    <PackageReference Include="ConfigurationValidation" Version="1.0.0" />
+    <PackageReference Include="ConfigurationValidation" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.21" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.21" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.21" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.21" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.21" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.30" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.30" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.30" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.30" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.30" />
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.6" />
   </ItemGroup>
 
   <!-- === Solution project dependencies ===-->

@@ -18,5 +18,10 @@ namespace Sample.AspNet5.Logic
         /// Dummy method in business domain logic, which ends up throwing data validation exception.
         /// </summary>
         Task ValidationError();
+
+        /// <summary>
+        /// Mimics OperationCanceledException
+        /// </summary>
+        Task OperationCancelled();
     }
 }

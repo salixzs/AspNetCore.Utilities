@@ -84,20 +84,30 @@ public abstract class ApiJsonExceptionMiddleware
 
             var errorObject = this.CreateErrorObject(exc, httpContext.Response?.StatusCode);
             errorObject.RequestedUrl = httpContext.Features.Get<IHttpRequestFeature>()?.RawTarget ?? httpContext.Request?.Path.ToString();
-            if (errorObject.ErrorType == ApiErrorType.DataValidationError)
+
+            if (errorObject.ErrorBehavior.HasFlag(ApiErrorBehavior.LogError))
             {
-                this.Logger.LogError(exc, "Data validation exception occurred with message: \"{ExceptionMessage}\".", exc.Message);
-                await WriteExceptionAsync(httpContext, errorObject, 400).ConfigureAwait(false);
+                if (errorObject.ErrorType == ApiErrorType.DataValidationError)
+                {
+                    this.Logger.LogError(exc, "Data validation exception occurred with message: \"{ExceptionMessage}\".", exc.Message);
+                }
+                else
+                {
+                    this.Logger.LogError(
+                        exc,
+                        "Unhandled exception occurred of type {ExceptionType} with message: \"{ExceptionMessage}\".",
+                        exc.GetType().Name,
+                        exc.Message);
+                }
             }
-            else
+
+            if (errorObject.ErrorBehavior.HasFlag(ApiErrorBehavior.RespondWithError))
             {
-                this.Logger.LogError(
-                    exc,
-                    "Unhandled exception occurred of type {ExceptionType} with message: \"{ExceptionMessage}\".",
-                    exc.GetType().Name,
-                    exc.Message);
-                await WriteExceptionAsync(httpContext, errorObject, errorObject.Status > 399 ? errorObject.Status : 500
-                ).ConfigureAwait(false);
+                await WriteExceptionAsync(
+                    httpContext,
+                    errorObject,
+                    errorObject.Status > 399 ? errorObject.Status : errorObject.ErrorType == ApiErrorType.DataValidationError ? 400 : 500)
+                    .ConfigureAwait(false);
             }
         }
     }

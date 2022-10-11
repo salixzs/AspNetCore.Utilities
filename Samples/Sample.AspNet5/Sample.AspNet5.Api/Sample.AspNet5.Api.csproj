@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConfigurationValidation" Version="1.0.0" />
+    <PackageReference Include="ConfigurationValidation" Version="1.0.1" />
   </ItemGroup>
 
   <!-- ===== This normally would be NuGet package reference ===== -->
@@ -23,12 +23,12 @@
   </ItemGroup>
   
   <!-- ===== This causes to regenerate build_data.html during build ===== -->
-  <Target Name="CreateBuildReport" AfterTargets="AfterBuild" >
+  <Target Name="CreateBuildReport" AfterTargets="AfterBuild">
     <PropertyGroup>
-      <PowerShellCommand Condition=" '$(OS)' == 'Windows_NT' " >powershell</PowerShellCommand>
-      <PowerShellCommand Condition=" '$(OS)' == 'Unix' " >pwsh</PowerShellCommand>
+      <PowerShellCommand Condition=" '$(OS)' == 'Windows_NT' ">powershell</PowerShellCommand>
+      <PowerShellCommand Condition=" '$(OS)' == 'Unix' ">pwsh</PowerShellCommand>
       <ScriptLocation>$(MSBuildProjectDirectory)\..\BuildScripts\CreateBuildReport.ps1</ScriptLocation>
-      <RequestedBy  Condition="'$(RequestedBy)' == ''">Local user</RequestedBy>
+      <RequestedBy Condition="'$(RequestedBy)' == ''">Local user</RequestedBy>
     </PropertyGroup>
     <Exec Command="$(PowerShellCommand) -ExecutionPolicy Unrestricted -NoProfile -File $(ScriptLocation) -OS $(OS) -Platform $(Platform) -Configuration &quot;$(Configuration)&quot; -TargetFrameworkVersion &quot;$(TargetFrameworkVersion) ($(MSBuildRuntimeType))&quot; -RequestedBy &quot;$(RequestedBy)&quot;" />
   </Target>

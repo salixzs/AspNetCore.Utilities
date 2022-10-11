@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace Salix.AspNetCore.Utilities;
 
@@ -65,6 +66,16 @@ public class ApiError
     /// List of validation errors, when Error is data validation error.
     /// </summary>
     public List<ApiDataValidationError> ValidationErrors { get; set; } = new();
+
+    /// <summary>
+    /// Specify how exception handler should deal with exception.<br/>
+    /// Default - logs error via Logger (you specify sinks) and returns Json error object to client (re-throws).<br/>
+    /// Other combinations can be specified, including completely ignoring the error.<br/>
+    /// Ignoring may come handy to set via <see cref="ApiJsonExceptionMiddleware.HandleSpecialException(ApiError, Exception)"/> method<br/>
+    /// to ignore <see cref="OperationCanceledException"/> and exceptions derived from it.
+    /// </summary>
+    [JsonIgnore]
+    public ApiErrorBehavior ErrorBehavior { get; set; } = ApiErrorBehavior.LogAndThrowError;
 
     /// <summary>
     /// Displays object main properties in Debug screen. (Only for development purposes).

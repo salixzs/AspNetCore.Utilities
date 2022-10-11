@@ -81,6 +81,12 @@ namespace Sample.AspNet5.Api.Middleware
                 apiError.Title = "Functionality is not yet implemented.";
             }
 
+            if (exception is OperationCanceledException operationCanceledException)
+            {
+                // This returns empty (200) response and does not log error.
+                apiError.ErrorBehavior = ApiErrorBehavior.Ignore;
+            }
+
             return apiError;
         }
     }
