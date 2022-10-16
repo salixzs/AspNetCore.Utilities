@@ -1,5 +1,15 @@
 # Release notes
 
+## 3.0.0
+- Possible breaking change. If used custom exception handler method with setting error type = `ApiErrorType.DataValidationError` - now if you set HttpStatus code other than 400 (and >400), then it is set and returned to client (Previously it was always 400).
+- Added possibility to control behavior of the JSON error handler
+  - Previous behavior: Logging + Json error return (still as Default!)
+  - Only Logging without error return
+  - Only error return without logging error
+  - Ignoring completely (no logging and no error return)
+
+Behavior control is described in [Documentation](https://github.com/salixzs/AspNetCore.Utilities/blob/main/Documentation/GlobalErrorHandler.md#behavior-control)
+
 ## 2.3.0 (@ time for .Net 6)
 
 Added optional parameter to hide buttons and configuration display in front page. (use hostEnvironment to control it).
