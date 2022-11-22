@@ -58,6 +58,7 @@ public static class IndexPageExtensions
     /// <param name="idxPage">The index page instance.</param>
     /// <param name="buttonTitle">Title of the button.</param>
     /// <param name="linkUrl">The link URL to go to when button is clicked.</param>
+    /// <param name="shouldHide">Button is hidden, if true (default - false).</param>
     public static IndexPage AddLinkButton(this IndexPage idxPage, string buttonTitle, string linkUrl, bool shouldHide = false)
     {
         if (!shouldHide)
@@ -190,6 +191,13 @@ public static class IndexPageExtensions
         return idxPage;
     }
 
+    /// <summary>
+    /// Appends configuration values to page.
+    /// </summary>
+    /// <param name="idxPage">Page object.</param>
+    /// <param name="configurations">Collections of configuration items to add.</param>
+    /// <param name="shouldHide">When true (default - false) - will not add given items to page. Used for dynamic control (Hosting.IsDevelopment).</param>
+    /// <returns></returns>
     public static IndexPage SetConfigurationValues(this IndexPage idxPage, Dictionary<string, string> configurations, bool shouldHide = false)
     {
         if (!shouldHide)

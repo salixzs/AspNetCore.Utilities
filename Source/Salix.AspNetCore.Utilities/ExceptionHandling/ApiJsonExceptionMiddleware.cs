@@ -20,6 +20,9 @@ public abstract class ApiJsonExceptionMiddleware
     private readonly RequestDelegate _next;
     private readonly ApiJsonExceptionOptions _options;
 
+    /// <summary>
+    /// Logger instance.
+    /// </summary>
     protected ILogger<ApiJsonExceptionMiddleware> Logger { get; }
 
     /// <summary>
@@ -196,6 +199,7 @@ public abstract class ApiJsonExceptionMiddleware
     /// Gets the stack trace of exception in suitable format.
     /// </summary>
     /// <param name="exception">The exception.</param>
+    /// <param name="omitContaining">List of partial strings, which will act as filter to skip frames containing these strings.</param>
     private static List<string> GetStackTrace(Exception exception, HashSet<string> omitContaining)
     {
         var frames = new List<string>();

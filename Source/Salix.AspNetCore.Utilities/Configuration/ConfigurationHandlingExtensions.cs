@@ -6,6 +6,9 @@ using Microsoft.Extensions.Options;
 
 namespace Salix.AspNetCore.Utilities;
 
+/// <summary>
+/// Extensions to add configuration validation.
+/// </summary>
 public static class ConfigurationHandlingExtensions
 {
     /// <summary>

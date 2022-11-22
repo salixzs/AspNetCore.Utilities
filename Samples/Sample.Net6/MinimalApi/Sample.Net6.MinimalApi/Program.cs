@@ -30,7 +30,8 @@ app.MapGet("/", (IConfiguration config) =>
 // ----- > Here Home page composing/exposing ends
 
 
-app.MapGet("/api/error", () => {
+app.MapGet("/api/error", () =>
+{
     throw new Exception("Just to test error handler.");
 });
 

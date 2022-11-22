@@ -9,6 +9,12 @@ namespace Salix.AspNetCore.Utilities;
 /// </summary>
 public static class ConfigurationObfuscator
 {
+    /// <summary>
+    /// Hides sensitive data in SQL connection string. For local server (localhost) does not hide anything.
+    /// </summary>
+    /// <param name="sqlConnectionString">SQL Connection string.</param>
+    /// <param name="partially">If true - will hide server, database and UserId (if present) partially - only password is hidden completely.</param>
+    /// <returns>Obfuscated connection string with hidden sensitive parts.</returns>
     public static string ObfuscateSqlConnectionString(this string sqlConnectionString, bool partially = false)
     {
         var parts = Regex.Matches(sqlConnectionString, @"(?<key>[^=;,]+)=(?<val>[^;,]+(,\d+)?)", RegexOptions.IgnoreCase);

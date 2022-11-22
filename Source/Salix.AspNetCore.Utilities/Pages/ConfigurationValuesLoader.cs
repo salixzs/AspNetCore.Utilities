@@ -7,6 +7,7 @@ public class ConfigurationValuesLoader : IConfigurationValuesLoader
 {
     private readonly IConfigurationRoot _configuration;
 
+    /// <inheritdoc cref="IConfigurationValuesLoader"/>
     public ConfigurationValuesLoader(IConfiguration configuration) => _configuration = (IConfigurationRoot)configuration;
 
     /// <inheritdoc/>

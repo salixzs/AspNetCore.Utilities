@@ -14,6 +14,7 @@ public class ConfigurationHealthCheck : IHealthCheck
     /// <summary>
     /// Uses <see cref="ConfigurationValidation"/> functionality to verify application configuration.
     /// </summary>
+    /// <param name="configurations">Validatable configuration items.</param>
     /// <param name="showConfigurationValues">When true - shows used configuration values as part of Health check data.</param>
     public ConfigurationHealthCheck(IEnumerable<IValidatableConfiguration> configurations, bool showConfigurationValues)
     {

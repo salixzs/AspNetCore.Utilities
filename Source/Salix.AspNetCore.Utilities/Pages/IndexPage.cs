@@ -23,7 +23,6 @@ public class IndexPage
     /// <summary>
     /// Retrieves Index/Landing page as string, containing ready-made HTML.
     /// </summary>
-    /// <param name="buildData">Build and API specific data to include in page.</param>
     public string GetContents()
     {
         // {IncludeFile} = <div class="column"></div> or string empty

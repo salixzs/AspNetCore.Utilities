@@ -57,7 +57,7 @@ public struct ApiDataValidationError : IEquatable<ApiDataValidationError>
     public override bool Equals(object obj) => obj is ApiDataValidationError error && this.Equals(error);
 
     /// <summary>
-    /// Determines whether the specified <see cref="ValidationError" /> is equal to this instance.
+    /// Determines whether the specified <see cref="ApiDataValidationError" /> is equal to this instance.
     /// </summary>
     /// <param name="other">The other ValidationError.</param>
     public bool Equals(ApiDataValidationError other) =>
