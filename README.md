@@ -1,4 +1,15 @@
 # Salix.AspNetCore.Utilities
+
+<p style="color: red">NOTE: Package is outdated and split into several seprate packages, which are receiving updates from now on.</p>
+Use these packages in stead of this single package:
+
+- [JSON Error handler](https://www.nuget.org/packages/Salix.AspNetCore.JsonExceptionHandler/)
+- [API dynamic FrontPage (with binaries versioning approaches)](https://www.nuget.org/packages/Salix.AspNetCore.FrontPage/)
+- [Health check with JSON result + Health page](https://www.nuget.org/packages/Salix.AspNetCore.HealthCheck/)
+- [Configuration validation](https://www.nuget.org/packages/ConfigurationValidation.AspNetCore/)
+
+If you are using/upgrading to .Net 8.0 - do not use this package, but reference single packages listed above.
+
 A collection of additional functionality to Asp.Net Core framework for building better APIs.
 
 [![Build & Tests](https://github.com/salixzs/AspNetCore.Utilities/actions/workflows/build_test.yml/badge.svg?branch=main)](https://github.com/salixzs/ConfigurationValidation/actions/workflows/build_test.yml) [![Nuget version](https://img.shields.io/nuget/v/Salix.AspNetCore.Utilities.svg)](https://www.nuget.org/packages/Salix.AspNetCore.Utilities/) [![NuGet Downloads](https://img.shields.io/nuget/dt/Salix.AspNetCore.Utilities.svg)](https://www.nuget.org/packages/Salix.AspNetCore.Utilities/)
